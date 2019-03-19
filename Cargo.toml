@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "iv",
+    "iv-mm",
+    "iv-va",
+]
+
