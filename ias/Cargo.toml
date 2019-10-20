@@ -10,8 +10,6 @@ edition = "2018"
 rx = { path = "../../rx/rx" }
 rx-net = { path = "../../rx/rx-net" }
 
-
-
 chrono = { version = "*", features = ["serde"] }
 uuid = { version = "0.6.*", features = ["serde", "v5"] }
 

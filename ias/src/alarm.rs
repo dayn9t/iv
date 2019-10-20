@@ -1,65 +1,73 @@
 use crate::basic::*;
 
-const I: i32 = 5;
-
-struct AT(i32);
-
-const C: AT = AT(0);
-
 /// 报警类型
-#[repr(u32)]
-#[derive(Clone, Serialize, Deserialize)]
-enum _AlarmType {
-    NONE = 0,
+pub mod alarm_type {
+    pub const NONE: i32 = 0;
 
     //通用报警
+
     /// 视频检查：信号丢失
-    VIDEO_LOSS = 101,
+    pub const VIDEO_LOSS: i32 = 101;
+
     /// 视频检查：摄像机遮挡
-    CAMERA_BLOCKED = 102,
+    pub const CAMERA_BLOCKED: i32 = 102;
+
     /// 视频检查：摄像机移位
-    CAMERA_MOVED = 103,
+    pub const CAMERA_MOVED: i32 = 103;
+
     /// 物品：遗留物
-    UNATTENDED = 121,
+    pub const UNATTENDED: i32 = 121;
+
     /// 物品：移除
-    REMOVAL = 122,
+    pub const REMOVAL: i32 = 122;
 
     //定制报警：ATM机
+
     /// 插卡口异常
-    ATM_SLOT = 401,
+    pub const ATM_SLOT: i32 = 401;
+
     /// 键盘异常
-    ATM_KEYBOARD = 402,
+    pub const ATM_KEYBOARD: i32 = 402;
+
     /// 破坏ATM
-    ATM_DAMAGE = 411,
+    pub const ATM_DAMAGE: i32 = 411;
+
     /// 脸部特征不清
-    ATM_FUZZY_FACE = 421,
+    pub const ATM_FUZZY_FACE: i32 = 421;
+
     /// 脸部出现
-    ATM_FACE = 422,
+    pub const ATM_FACE: i32 = 422;
 
     //定制报警：防护舱
     /// 尾随进入
-    CABIN_TAILGATING = 501,
+    pub const CABIN_TAILGATING: i32 = 501;
+
     /// 强行推入
-    CABIN_THRUST = 502,
+    pub const CABIN_THRUST: i32 = 502;
 
     //定制报警：加钞间
+
     /// 加钞间人数限制
-    BACKROOM_NUM_LIMIT = 601,
+    pub const BACKROOM_NUM_LIMIT: i32 = 601;
+
     /// 加钞间下蹲
-    BACKROOM_SQUAT = 611,
+    pub const BACKROOM_SQUAT: i32 = 611;
 
     //定制报警：自助银行大厅
     /// 徘徊
-    HALL_LOITERING = 701,
+    pub const HALL_LOITERING: i32 = 701;
+
     /// 滞留
-    HALL_RETENTION = 702,
+    pub const HALL_RETENTION: i32 = 702;
+
     /// 打斗
-    HALL_FIGHTING = 711,
+    pub const HALL_FIGHTING: i32 = 711;
+
     /// 挟持
-    HALL_SEIZING = 712,
+    pub const HALL_SEIZING: i32 = 712;
 
     //定制报警：无特定区域
-    DAMAGE = 801,
+    pub const DAMAGE: i32 = 801;
 }
 
 /// 规则Id
@@ -157,5 +165,19 @@ impl AlarmInfo {
     /// 替换路径前缀
     pub fn replace_path(&self, src_prefix: &str, dst_prefix: &str) -> AlarmInfo {
         unimplemented!()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn var_works() {
+        let a = alarm_type::ATM_DAMAGE;
+
+        let s = to_json(&a);
+
+        //assert_eq!();
     }
 }
