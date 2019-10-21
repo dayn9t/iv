@@ -86,7 +86,7 @@ type NodeId = u32;
 pub type AlarmType = i32;
 
 /// 报警Id
-pub type AlarmId = i32;
+pub type AlarmId = usize;
 
 /// 持续时间（秒）
 pub type Duration = f64;
@@ -104,48 +104,48 @@ struct FromInfo {
     node_id: NodeId,
 }
 
-type floats = Vec<f32>;
+type Floats = Vec<f32>;
 
 /// 内部保留信息
 #[derive(Default, Clone, Serialize, Deserialize)]
 struct ReservedInfo {
     /// 分类器输出
-    probs: floats,
+    probs: Floats,
 }
 
 /// 报警信息
 #[derive(Clone, Serialize, Deserialize)]
 pub struct AlarmInfo {
     /// 报警事件ID
-    id: AlarmId,
+    pub id: AlarmId,
 
     /// 报警类型
     #[serde(rename = "type")]
-    type_: AlarmType,
+    pub type_: AlarmType,
 
     /// 绝对时间，格式:"2011-11-01 13:45:23.120"
     pub time: UtcDateTime,
 
     /// 截图信息(部分图像可能不存在)
-    images: Vec<String>,
+    pub images: Vec<String>,
 
     /// 关注区域图标
-    ico_file: String,
+    pub ico_file: String,
 
     /// 录像文件
-    record: String,
+    pub record: String,
 
     /// 相对录像开始时间的相对时标
-    timestamp: Duration,
+    pub timestamp: Duration,
 
     /// 置信度[0, 100]
-    confidence: i32,
+    pub confidence: i32,
 
     /// 报警来源信息
-    from: FromInfo,
+    pub from: FromInfo,
 
     /// 内部保留信息，不需要呈现
-    reserved: ReservedInfo,
+    pub reserved: ReservedInfo,
 }
 
 impl AlarmInfo {
@@ -165,6 +165,24 @@ impl AlarmInfo {
     /// 替换路径前缀
     pub fn replace_path(&self, src_prefix: &str, dst_prefix: &str) -> AlarmInfo {
         unimplemented!()
+    }
+}
+
+impl Default for AlarmInfo {
+    /// 创建简要访问信息
+    fn default() -> Self {
+        AlarmInfo {
+            id: AlarmId::default(),
+            type_: AlarmType::default(),
+            time: UtcDateTime::from_str("").unwrap(),
+            images: Vec::default(),
+            ico_file: String::default(),
+            record: String::default(),
+            timestamp: Duration::default(),
+            confidence: i32::default(),
+            from: FromInfo::default(),
+            reserved: ReservedInfo::default(),
+        }
     }
 }
 
