@@ -1,5 +1,10 @@
-use rx::fs;
-use std::path::{Path, PathBuf};
+use super::app::AppInfo;
+use clap::{App, Arg};
+use std::path::PathBuf;
+
+//use serde::{Deserialize, Serialize};
+//use rx::fs;
+use rx::text::*;
 
 /// 媒体源ID
 pub type SourceId = i32;
@@ -8,9 +13,10 @@ pub type SourceId = i32;
 pub type GroupId = i32;
 
 /// 应用程序参数
+#[derive(Deserialize, Serialize)]
 pub struct AppParams {
     /// 项目ID
-    project_id: String,
+    project: String,
 
     /// 工作目录
     work_dir: PathBuf,
@@ -31,7 +37,7 @@ pub struct AppParams {
     group_id: GroupId,
 
     /// 显示详细信息
-    verbose: bool,
+    verbose: u64,
 }
 
 const CFG: &str = "cfg";
@@ -43,6 +49,70 @@ const RECORD: &str = "record";
 const SNAPSHOT: &str = "snapshot";
 
 impl AppParams {
+    /// 解析命令行参数
+    pub fn new(app_info: &AppInfo) -> AppParams {
+        let matches = App::new(app_info.full_id())
+            .version(app_info.version.as_str())
+            .author(app_info.author.as_str())
+            .about(app_info.about.as_str())
+            .arg(
+                Arg::with_name("CONFIG")
+                    .short("c")
+                    .long("config")
+                    .default_value("work")
+                    .help("Sets the config name")
+                    .takes_value(true),
+            )
+            .arg(
+                Arg::with_name("DATABASE")
+                    .short("d")
+                    .long("database")
+                    .default_value("work")
+                    .help("Sets the database name")
+                    .takes_value(true),
+            )
+            .arg(
+                Arg::with_name("MODEL")
+                    .short("m")
+                    .long("model")
+                    .default_value("work")
+                    .help("Sets the model name")
+                    .takes_value(true),
+            )
+            .arg(
+                Arg::with_name("GROUP")
+                    .short("g")
+                    .long("group")
+                    .default_value("0")
+                    .help("Sets the group number")
+                    .takes_value(true),
+            )
+            .arg(
+                Arg::with_name("NODE")
+                    .help("Sets the node to use")
+                    .required(true)
+                    .index(1),
+            )
+            .arg(
+                Arg::with_name("v")
+                    .short("v")
+                    .multiple(true)
+                    .help("Sets the level of verbosity"),
+            )
+            .get_matches();
+
+        AppParams {
+            project: app_info.project.clone(),
+            work_dir: PathBuf::from("/var/").join(&app_info.project),
+            node: matches.value_of("NODE").unwrap().to_owned(),
+            cfg_name: matches.value_of("CONFIG").unwrap().to_owned(),
+            model_name: matches.value_of("MODEL").unwrap().to_owned(),
+            db_name: matches.value_of("DATABASE").unwrap().to_owned(),
+            group_id: matches.value_of("GROUP").unwrap().parse().unwrap(),
+            verbose: matches.occurrences_of("v"),
+        }
+    }
+
     /// 获取配置路径
     pub fn cfg_dir(&self) -> PathBuf {
         self.work_dir.join(CFG).join(&self.cfg_name)
@@ -104,7 +174,7 @@ impl AppParams {
 
     /// 获取节点话题
     pub fn node_topic(&self) -> String {
-        self.project_id.clone() + "/nodes/" + &self.node
+        self.project.clone() + "/nodes/" + &self.node
     }
 
     /// 检查组匹配
@@ -129,7 +199,7 @@ impl AppParams {
 
     /// 获取命令主题
     pub fn command_topic(&self) -> String {
-        self.project_id.clone() + "/system/command"
+        self.project.clone() + "/system/command"
     }
 
     /// 检查目录
@@ -143,5 +213,17 @@ impl AppParams {
             .join(name)
             .join(&self.node)
             .join(&self.db_name)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn param_works() {
+        //AppParams
+
+        //assert_eq!();
     }
 }

@@ -1,46 +1,17 @@
-#[macro_use]
-extern crate clap;
-
-use ias::*;
-/*
-/// 报警来源信息
-#[derive(Default, Clone, Serialize, Deserialize)]
-pub struct FromInfo {
-    /// 规则ID
-    rule_id: String,
-    /// 报警设备ID
-    device_id: DeviceId,
-    /// 报警设备所在组ID
-    group_id: GroupId,
-    /// 所在网点ID
-    node_id: NodeId,
-}
-*/
+use ias::app::*;
+use rx::text::*;
 
 fn main() {
-    let matches = clap_app!(dump =>
-        (version: "0.1")
-        (author: "J. <dayn9t@gmail.com>")
-        (about: "IAS dump service, dump alarm message into db")
-        (@arg v: -v --verbose "Print information verbosely")
-        (@arg CONFIG: -c --config +takes_value "Sets the config name")
-        (@arg DATABASE: -d --database +takes_value "Sets the database name")
-        (@arg NODE: +required "Sets the node to use")
-    )
-    .get_matches();
+    let app_info = AppInfo::new(
+        "ias",
+        "dump",
+        "保存程序",
+        "v0.1-alpha       build 2019-10-23 16:49:01",
+        "Howell J. <dayn9t@gmail.com>",
+        "IAS dump service, dump alarm message into database",
+    );
 
-    let node = matches.value_of("NODE").unwrap();
-    println!("Using node: {}", node);
+    let params = AppParams::new(&app_info);
 
-    let config = matches.value_of("CONFIG").unwrap_or("work");
-    println!("Value for config: {}", config);
-
-    let db = matches.value_of("DATABASE").unwrap_or("work");
-    println!("Value for db: {}", db);
-
-    let n = matches.occurrences_of("v") > 0;
-    match n {
-        false => println!("No verbose info"),
-        true => println!("Some verbose info"),
-    }
+    println!("args: {}", to_json(&params).unwrap());
 }

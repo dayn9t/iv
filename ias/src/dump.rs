@@ -37,7 +37,7 @@ pub fn do_dump() {
     for m in rx {
         if let Some(m) = m {
             let info: AlarmInfo = serde_json::from_slice(m.payload()).unwrap();
-            tab.put(info.id, &info);
+            tab.put(info.id, &info).unwrap();
         }
     }
 }

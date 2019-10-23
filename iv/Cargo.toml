@@ -6,3 +6,8 @@ edition = "2018"
 
 [dependencies]
 rx = { path = "../../rx/rx" }
+rx-db = { path = "../../rx/rx-db" }
+rx-net = { path = "../../rx/rx-net" }
+
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
