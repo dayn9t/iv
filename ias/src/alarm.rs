@@ -1,4 +1,5 @@
 use crate::basic::*;
+use std::time::SystemTime;
 
 /// 报警类型
 pub mod alarm_type {
@@ -71,16 +72,16 @@ pub mod alarm_type {
 }
 
 /// 规则Id
-type RuleId = u32;
+pub type RuleId = u32;
 
 /// 设备Id
-type DeviceId = u32;
+pub type DeviceId = u32;
 
 /// 组Id
-type GroupId = u32;
+pub type GroupId = u32;
 
 /// 节点Id
-type NodeId = u32;
+pub type NodeId = u32;
 
 /// 报警类型
 pub type AlarmType = i32;
@@ -93,7 +94,7 @@ pub type Duration = f64;
 
 /// 报警来源信息
 #[derive(Default, Clone, Serialize, Deserialize)]
-struct FromInfo {
+pub struct FromInfo {
     /// 规则ID
     rule_id: RuleId,
     /// 报警设备ID
@@ -104,11 +105,11 @@ struct FromInfo {
     node_id: NodeId,
 }
 
-type Floats = Vec<f32>;
+pub type Floats = Vec<f32>;
 
 /// 内部保留信息
 #[derive(Default, Clone, Serialize, Deserialize)]
-struct ReservedInfo {
+pub struct ReservedInfo {
     /// 分类器输出
     probs: Floats,
 }
@@ -174,7 +175,7 @@ impl Default for AlarmInfo {
         AlarmInfo {
             id: AlarmId::default(),
             type_: AlarmType::default(),
-            time: UtcDateTime::from_str("").unwrap(),
+            time: UtcDateTime::from(SystemTime::now()),
             images: Vec::default(),
             ico_file: String::default(),
             record: String::default(),
