@@ -1,9 +1,8 @@
 pub use alarm::*;
-pub use app_params::*;
 pub use basic::*;
 
 mod alarm;
-mod app_params;
+pub mod app;
 mod basic;
 pub mod dump;
 

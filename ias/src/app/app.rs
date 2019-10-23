@@ -1,13 +1,11 @@
 /// 构建信息
-struct BuildInfo
-{
+struct BuildInfo {
     build_date: String,
     build_time: String,
 }
 
 ///项目信息
-struct ProjectInfo
-{
+struct ProjectInfo {
     /// 项目ID
     id: String,
 
@@ -18,14 +16,13 @@ struct ProjectInfo
     version: String,
 
     build_info: BuildInfo,
-
 }
 
 ///应用程序信息
-struct AppInfo
-{
-    id: String,
+struct AppInfo {
     /// 应用程序ID
-    name: String,
+    id: String,
+
     /// 应用程序名称
+    name: String,
 }
