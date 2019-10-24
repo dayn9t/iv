@@ -2,11 +2,17 @@ use ias::app::*;
 use rx::text::*;
 
 fn main() {
+
+    println!("VERGEN_SEMVER: {}", env!("VERGEN_SEMVER"));
+    println!("VERGEN_SHA_SHORT: {}", env!("VERGEN_SHA_SHORT"));
+    println!("VERGEN_COMMIT_DATE: {}", env!("VERGEN_COMMIT_DATE"));
+
+
     let app_info = AppInfo::new(
         "ias",
         "dump",
         "保存程序",
-        "v0.1-alpha build 2019-10-23 16:49:01",
+        env!("VERGEN_BUILD_TIMESTAMP"),
         "Howell J. <dayn9t@gmail.com>",
         "IAS dump service, dump alarm message into database",
     );
@@ -17,4 +23,6 @@ fn main() {
     println!("cfg: {:?}", params.cfg_dir());
     println!("log: {:?}", params.log_dir());
     println!("snapshot: {:?}", params.snapshot_dir());
+
+
 }
