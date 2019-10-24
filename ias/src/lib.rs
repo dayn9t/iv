@@ -19,7 +19,7 @@ pub fn pkg() -> app::PackageInfo {
         version: env!("CARGO_PKG_VERSION"),
         authors: env!("CARGO_PKG_AUTHORS"),
         description: env!("CARGO_PKG_DESCRIPTION"),
-        date: env!("VERGEN_COMMIT_DATE"),
+        date: env!("VERGEN_BUILD_DATE"),
         sha_short: env!("VERGEN_SHA_SHORT"),
     }
 }

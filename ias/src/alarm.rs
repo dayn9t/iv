@@ -198,7 +198,7 @@ mod tests {
     fn var_works() {
         let a = alarm_type::ATM_DAMAGE;
 
-        let s = to_json(&a);
+        let _s = to_json(&a);
 
         //assert_eq!();
     }

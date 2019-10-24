@@ -22,7 +22,7 @@ pub struct PackageInfo {
 impl PackageInfo {
     /// 完整版本信息
     pub fn full_version(&self) -> String {
-        format!("v{} {}  build: {}", self.version, self.sha_short, self.date)
+        format!("v{}-{}  build: {}", self.version, self.sha_short, self.date)
     }
 }
 
@@ -50,6 +50,6 @@ impl AppInfo {
 
     /// 完整ID
     pub fn full_name(&self) -> String {
-        env!("CARGO_PKG_NAME").to_owned() + "-" + &self.name
+        self.package.name.to_owned() + "-" + &self.name
     }
 }
