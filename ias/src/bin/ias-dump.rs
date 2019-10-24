@@ -6,7 +6,7 @@ fn main() {
         "ias",
         "dump",
         "保存程序",
-        "v0.1-alpha       build 2019-10-23 16:49:01",
+        "v0.1-alpha build 2019-10-23 16:49:01",
         "Howell J. <dayn9t@gmail.com>",
         "IAS dump service, dump alarm message into database",
     );
