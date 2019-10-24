@@ -1,5 +1,5 @@
 use super::app::AppInfo;
-use clap::{App, Arg};
+
 use std::path::PathBuf;
 
 //use serde::{Deserialize, Serialize};
@@ -17,6 +17,9 @@ pub type GroupId = i32;
 pub struct AppParams {
     /// 项目ID
     project: String,
+
+    /// 应用程序ID
+    app: String,
 
     /// 工作目录
     work_dir: PathBuf,
@@ -49,8 +52,32 @@ const RECORD: &str = "record";
 const SNAPSHOT: &str = "snapshot";
 
 impl AppParams {
+    /// 创建命令行参数
+    pub fn new(
+        app_info: &AppInfo,
+        node: &str,
+        cfg_name: &str,
+        model_name: &str,
+        db_name: &str,
+        group_id: GroupId,
+        verbose: u64,
+    ) -> AppParams {
+        AppParams {
+            project: app_info.project.clone(),
+            app: app_info.id.clone(),
+            work_dir: PathBuf::from("/var/").join(&app_info.project),
+            node: node.to_owned(),
+            cfg_name: cfg_name.to_owned(),
+            model_name: model_name.to_owned(),
+            db_name: db_name.to_owned(),
+            group_id,
+            verbose,
+        }
+    }
+
     /// 解析命令行参数
-    pub fn new(app_info: &AppInfo) -> AppParams {
+    pub fn parse_args(app_info: &AppInfo) -> AppParams {
+        use clap::{App, Arg};
         let matches = App::new(app_info.full_id())
             .version(app_info.version.as_str())
             .author(app_info.author.as_str())
@@ -101,16 +128,16 @@ impl AppParams {
             )
             .get_matches();
 
-        AppParams {
-            project: app_info.project.clone(),
-            work_dir: PathBuf::from("/var/").join(&app_info.project),
-            node: matches.value_of("NODE").unwrap().to_owned(),
-            cfg_name: matches.value_of("CONFIG").unwrap().to_owned(),
-            model_name: matches.value_of("MODEL").unwrap().to_owned(),
-            db_name: matches.value_of("DATABASE").unwrap().to_owned(),
-            group_id: matches.value_of("GROUP").unwrap().parse().unwrap(),
-            verbose: matches.occurrences_of("v"),
-        }
+        let node = matches.value_of("NODE").unwrap();
+        let cfg_name = matches.value_of("CONFIG").unwrap();
+        let model_name = matches.value_of("MODEL").unwrap();
+        let db_name = matches.value_of("DATABASE").unwrap();
+        let group_id = matches.value_of("GROUP").unwrap().parse().unwrap();
+        let verbose = matches.occurrences_of("v");
+
+        AppParams::new(
+            app_info, node, cfg_name, model_name, db_name, group_id, verbose,
+        )
     }
 
     /// 获取配置路径
@@ -165,11 +192,13 @@ impl AppParams {
 
     /// 获取日志名称
     pub fn log_dir(&self) -> PathBuf {
-        /*PathBuf p = dir_with_db("log");
-        if (group_id > 0)
-        p /= std::to_string(group_id);
-        p;*/
-        unimplemented!()
+        let mut p = self.dir_with_db("log");
+        let mut app_id = self.app.clone();
+        if self.group_id > 0 {
+            app_id += &self.group_id.to_string();
+        }
+        p.push(app_id);
+        p
     }
 
     /// 获取节点话题
@@ -222,8 +251,35 @@ mod tests {
 
     #[test]
     fn param_works() {
-        //AppParams
+        let app_info = AppInfo::new(
+            "ias",
+            "app",
+            "测试程序",
+            "v0.1-alpha",
+            "Howell J. <dayn9t@gmail.com>",
+            "IAS test service",
+        );
 
-        //assert_eq!();
+        const G: GroupId = 9;
+        const V: u64 = 3;
+
+        let p = AppParams::new(
+            &app_info,
+            "node1",
+            "cfg1",
+            "mod1",
+            "db1",
+            G,
+            V,
+        );
+
+        assert_eq!(p.cfg_dir(), PathBuf::from("/var/ias/cfg/cfg1"));
+        assert_eq!(p.db_dir(), PathBuf::from("/var/ias/db/node1/db1"));
+        assert_eq!(p.model_dir(), PathBuf::from("/var/ias/model/mod1"));
+        assert_eq!(p.snapshot_dir(), PathBuf::from("/var/ias/snapshot/node1/db1"));
+        assert_eq!(p.record_dir(), PathBuf::from("/var/ias/record/node1/db1"));
+        assert_eq!(p.msg_dir(), PathBuf::from("/var/ias/msg/node1/db1"));
+        assert_eq!(p.sample_dir(), PathBuf::from("/var/ias/sample/node1/db1"));
+        assert_eq!(p.log_dir(), PathBuf::from("/var/ias/log/node1/db1/app9"));
     }
 }

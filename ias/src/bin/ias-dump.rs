@@ -11,7 +11,10 @@ fn main() {
         "IAS dump service, dump alarm message into database",
     );
 
-    let params = AppParams::new(&app_info);
+    let params = AppParams::parse_args(&app_info);
 
     println!("args: {}", to_json(&params).unwrap());
+    println!("cfg: {:?}", params.cfg_dir());
+    println!("log: {:?}", params.log_dir());
+    println!("snapshot: {:?}", params.snapshot_dir());
 }
