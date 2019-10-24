@@ -6,7 +6,7 @@ fn main() {
     println!("VERGEN_SEMVER: {}", env!("VERGEN_SEMVER"));
     println!("VERGEN_SHA_SHORT: {}", env!("VERGEN_SHA_SHORT"));
     println!("VERGEN_COMMIT_DATE: {}", env!("VERGEN_COMMIT_DATE"));
-
+    println!("VERGEN_SHA: {}", env!("VERGEN_SHA"));
 
     let app_info = AppInfo::new(
         "ias",
