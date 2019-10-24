@@ -1,66 +1,55 @@
-/// 构建信息
-pub struct BuildInfo {
-    pub build_date: String,
-    pub build_time: String,
+/// 包信息
+pub struct PackageInfo {
+    /// 名称
+    pub name: &'static str,
+
+    /// 版本
+    pub version: &'static str,
+
+    /// 作者
+    pub authors: &'static str,
+
+    /// 描述信息
+    pub description: &'static str,
+
+    /// 构建日期
+    pub date: &'static str,
+
+    /// SHA
+    pub sha_short: &'static str,
 }
 
-/// 项目信息
-pub struct ProjectInfo {
-    /// 项目ID
-    pub id: String,
-
-    /// 项目名称
-    pub name: String,
-
-    /// 相聚版本
-    pub version: String,
-
-    pub build_info: BuildInfo,
+impl PackageInfo {
+    /// 完整版本信息
+    pub fn full_version(&self) -> String {
+        format!("v{} {}  build: {}", self.version, self.sha_short, self.date)
+    }
 }
 
 /// 应用程序信息(项目包括多个应用程序)
 pub struct AppInfo {
-    /// 项目ID
-    pub project: String,
-
-    /// 应用程序ID
-    pub id: String,
-
     /// 应用程序名称
     pub name: String,
 
-    /// 应用程序版本
-    pub version: String,
-
-    /// 应用程序作者
-    pub author: String,
-
     /// 应用程序表述信息
     pub about: String,
+
+    /// 包信息
+    pub package: PackageInfo,
 }
 
 impl AppInfo {
     /// 创建引用程序信息
-    pub fn new(
-        project: &str,
-        id: &str,
-        name: &str,
-        version: &str,
-        author: &str,
-        about: &str,
-    ) -> AppInfo {
+    pub fn new(name: &str, about: &str, package: PackageInfo) -> AppInfo {
         AppInfo {
-            project: project.to_owned(),
-            id: id.to_owned(),
             name: name.to_owned(),
-            version: version.to_owned(),
-            author: author.to_owned(),
             about: about.to_owned(),
+            package,
         }
     }
 
     /// 完整ID
-    pub fn full_id(&self) -> String {
-        self.project.clone() + "-" + &self.id
+    pub fn full_name(&self) -> String {
+        env!("CARGO_PKG_NAME").to_owned() + "-" + &self.name
     }
 }

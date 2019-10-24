@@ -1,10 +1,10 @@
-use super::app::AppInfo;
-
 use std::path::PathBuf;
 
 //use serde::{Deserialize, Serialize};
 //use rx::fs;
 use rx::text::*;
+
+use super::app::AppInfo;
 
 /// 媒体源ID
 pub type SourceId = i32;
@@ -15,8 +15,8 @@ pub type GroupId = i32;
 /// 应用程序参数
 #[derive(Deserialize, Serialize)]
 pub struct AppParams {
-    /// 项目ID
-    project: String,
+    /// 包名称
+    package: String,
 
     /// 应用程序ID
     app: String,
@@ -62,10 +62,11 @@ impl AppParams {
         group_id: GroupId,
         verbose: u64,
     ) -> AppParams {
+        let package = app_info.package.name.to_owned();
         AppParams {
-            project: app_info.project.clone(),
-            app: app_info.id.clone(),
-            work_dir: PathBuf::from("/var/").join(&app_info.project),
+            package: package.clone(),
+            app: app_info.name.clone(),
+            work_dir: PathBuf::from("/var/").join(package),
             node: node.to_owned(),
             cfg_name: cfg_name.to_owned(),
             model_name: model_name.to_owned(),
@@ -78,9 +79,10 @@ impl AppParams {
     /// 解析命令行参数
     pub fn parse_args(app_info: &AppInfo) -> AppParams {
         use clap::{App, Arg};
-        let matches = App::new(app_info.full_id())
-            .version(app_info.version.as_str())
-            .author(app_info.author.as_str())
+
+        let matches = App::new(app_info.full_name())
+            .version(app_info.package.full_version().as_str())
+            .author(app_info.package.authors)
             .about(app_info.about.as_str())
             .arg(
                 Arg::with_name("CONFIG")
@@ -203,7 +205,7 @@ impl AppParams {
 
     /// 获取节点话题
     pub fn node_topic(&self) -> String {
-        self.project.clone() + "/nodes/" + &self.node
+        self.package.clone() + "/nodes/" + &self.node
     }
 
     /// 检查组匹配
@@ -228,7 +230,7 @@ impl AppParams {
 
     /// 获取命令主题
     pub fn command_topic(&self) -> String {
-        self.project.clone() + "/system/command"
+        self.package.clone() + "/system/command"
     }
 
     /// 检查目录
@@ -251,32 +253,20 @@ mod tests {
 
     #[test]
     fn param_works() {
-        let app_info = AppInfo::new(
-            "ias",
-            "app",
-            "测试程序",
-            "v0.1-alpha",
-            "Howell J. <dayn9t@gmail.com>",
-            "IAS test service",
-        );
+        let app_info = AppInfo::new("app", "IAS test service", crate::pkg());
 
         const G: GroupId = 9;
         const V: u64 = 3;
 
-        let p = AppParams::new(
-            &app_info,
-            "node1",
-            "cfg1",
-            "mod1",
-            "db1",
-            G,
-            V,
-        );
+        let p = AppParams::new(&app_info, "node1", "cfg1", "mod1", "db1", G, V);
 
         assert_eq!(p.cfg_dir(), PathBuf::from("/var/ias/cfg/cfg1"));
         assert_eq!(p.db_dir(), PathBuf::from("/var/ias/db/node1/db1"));
         assert_eq!(p.model_dir(), PathBuf::from("/var/ias/model/mod1"));
-        assert_eq!(p.snapshot_dir(), PathBuf::from("/var/ias/snapshot/node1/db1"));
+        assert_eq!(
+            p.snapshot_dir(),
+            PathBuf::from("/var/ias/snapshot/node1/db1")
+        );
         assert_eq!(p.record_dir(), PathBuf::from("/var/ias/record/node1/db1"));
         assert_eq!(p.msg_dir(), PathBuf::from("/var/ias/msg/node1/db1"));
         assert_eq!(p.sample_dir(), PathBuf::from("/var/ias/sample/node1/db1"));

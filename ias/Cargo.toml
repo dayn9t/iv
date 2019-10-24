@@ -1,7 +1,7 @@
 [package]
 name = "ias"
-version = "0.1.0"
-authors = ["dayn9t <dayn9t@gmail.com>"]
+version = "0.1.1"
+authors = ["Howell J. <dayn9t@gmail.com>"]
 edition = "2018"
 
 [build-dependencies]
