@@ -6,8 +6,6 @@ use serde::{Deserialize, Serialize};
 
 use super::{PointT, SizeT, ValidGeoType};
 
-//use super::{PointT, RotatedRect, SizeT, ValidGeoType, ValidGeoType};
-
 #[inline(always)]
 fn partial_min<T: PartialOrd>(a: T, b: T) -> T {
     if a <= b {
