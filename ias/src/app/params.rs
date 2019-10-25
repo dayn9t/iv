@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
 //use serde::{Deserialize, Serialize};
-//use rx::fs;
-use rx::text::*;
+//use rx_core::fs;
+use rx_core::text::*;
 
 use super::app::AppInfo;
 

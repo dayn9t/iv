@@ -5,7 +5,7 @@ authors = ["dayn9t <dayn9t@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-rx = { path = "../../rx/rx" }
+rx-core = { path = "../../rx/rx-core" }
 rx-db = { path = "../../rx/rx-db" }
 rx-net = { path = "../../rx/rx-net" }
 

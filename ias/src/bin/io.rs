@@ -1,5 +1,5 @@
 use ias::*;
-use rx::text::*;
+use rx_core::text::*;
 
 fn main() {
     let a: AlarmInfo = load_json("/home/jiang/rs/iv-core/ias/data/maa-alarm.json").unwrap();

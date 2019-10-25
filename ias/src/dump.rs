@@ -1,4 +1,4 @@
-use rx::text::*;
+use rx_core::text::*;
 use rx_db::*;
 use rx_net::mqtt::*;
 

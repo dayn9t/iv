@@ -8,9 +8,10 @@ edition = "2018"
 vergen = "3"
 
 [dependencies]
-rx = { path = "../../rx/rx" }
+rx-core = { path = "../../rx/rx-core" }
 rx-db = { path = "../../rx/rx-db" }
 rx-net = { path = "../../rx/rx-net" }
+iv-core = { path = "../../iv/iv-core" }
 
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"

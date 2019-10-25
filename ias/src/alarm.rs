@@ -1,7 +1,5 @@
 use std::time::SystemTime;
 
-use serde::{Deserialize, Serialize};
-
 use crate::basic::*;
 
 /// 报警类型
