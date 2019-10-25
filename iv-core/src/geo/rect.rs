@@ -1,8 +1,6 @@
+use std::fmt;
+use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
-use std::{
-    fmt,
-    ops::{Add, AddAssign, Sub, SubAssign},
-};
 
 use num::{NumCast, ToPrimitive};
 
