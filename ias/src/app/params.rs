@@ -18,8 +18,11 @@ pub struct AppParams {
     /// 包名称
     package: String,
 
-    /// 应用程序ID
-    app: String,
+    /// 应用程序名
+    app_name: String,
+
+    /// 应用程序全名
+    app_full_name: String,
 
     /// 工作目录
     work_dir: PathBuf,
@@ -64,9 +67,16 @@ impl AppParams {
         verbose: u64,
     ) -> AppParams {
         let package = app_info.package.name.to_owned();
+
+        let mut app_full_name = app_info.full_name();
+        if group_id > 0 {
+            app_full_name += &group_id.to_string();
+        }
+
         AppParams {
             package: package.clone(),
-            app: app_info.name.clone(),
+            app_name: app_info.name.clone(),
+            app_full_name,
             work_dir: PathBuf::from("/var/").join(package),
             node: node.to_owned(),
             cfg_name: cfg_name.to_owned(),
@@ -143,9 +153,24 @@ impl AppParams {
         )
     }
 
+    /// 获取应用程序名
+    pub fn app_name(&self) -> String {
+        self.app_name.clone()
+    }
+
+    /// 获取应用程序全名
+    pub fn app_full_name(&self) -> String {
+        self.app_full_name.clone()
+    }
+
     /// 获取配置路径
     pub fn cfg_dir(&self) -> PathBuf {
         self.work_dir.join(CFG).join(&self.cfg_name)
+    }
+
+    /// 获取节点配置路径
+    pub fn node_cfg_dir(&self) -> PathBuf {
+        self.db_dir().join(CFG)
     }
 
     /// 获取模型路径
@@ -199,7 +224,7 @@ impl AppParams {
     /// 获取日志名称
     pub fn log_dir(&self) -> PathBuf {
         let mut p = self.dir_with_db(LOG);
-        let mut app_id = self.app.clone();
+        let mut app_id = self.app_name.clone();
         if self.group_id > 0 {
             app_id += &self.group_id.to_string();
         }
@@ -257,12 +282,15 @@ mod tests {
 
     #[test]
     fn param_works() {
-        let app_info = AppInfo::new("app", "IAS test service", crate::pkg());
+        let app_info = AppInfo::new("app", "IAS test service", crate::package_info());
 
         const G: GroupId = 9;
         const V: u64 = 3;
 
         let p = AppParams::new(&app_info, "node1", "cfg1", "mod1", "db1", G, V);
+
+        assert_eq!(p.app_name(), "app");
+        assert_eq!(p.app_full_name(), "ias-app9");
 
         assert_eq!(p.cfg_dir(), PathBuf::from("/var/ias/cfg/cfg1"));
         assert_eq!(p.db_dir(), PathBuf::from("/var/ias/db/node1/db1"));

@@ -10,7 +10,7 @@ mod basic;
 pub mod dump;
 
 /// 获取包信息
-pub fn pkg() -> app::PackageInfo {
+pub fn package_info() -> app::PackageInfo {
     app::PackageInfo {
         name: env!("CARGO_PKG_NAME"),
         version: env!("CARGO_PKG_VERSION"),

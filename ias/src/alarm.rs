@@ -125,14 +125,11 @@ pub struct AlarmInfo {
     #[serde(rename = "type")]
     pub type_: AlarmType,
 
-    /// 绝对时间，格式:"2011-11-01 13:45:23.120"
+    /// 绝对时间
     pub time: UtcDateTime,
 
     /// 截图信息(部分图像可能不存在)
     pub images: Vec<String>,
-
-    /// 关注区域图标
-    pub ico_file: String,
 
     /// 录像文件
     pub record: String,
@@ -178,7 +175,6 @@ impl Default for AlarmInfo {
             type_: AlarmType::default(),
             time: UtcDateTime::from(SystemTime::now()),
             images: Vec::default(),
-            ico_file: String::default(),
             record: String::default(),
             timestamp: Duration::default(),
             confidence: i32::default(),
