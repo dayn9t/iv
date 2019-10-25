@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "iv",
+    "iv-core",
     "iv-mm",
     "iv-va",
     "ias",

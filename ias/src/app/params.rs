@@ -47,6 +47,7 @@ const CFG: &str = "cfg";
 const DB: &str = "db";
 const MSG: &str = "msg";
 const MODEL: &str = "model";
+const LOG: &str = "log";
 const SAMPLE: &str = "sample";
 const RECORD: &str = "record";
 const SNAPSHOT: &str = "snapshot";
@@ -153,8 +154,11 @@ impl AppParams {
     }
 
     /// 获取模型的标签文件路径	//TODO: 不兼容于ias
-    pub fn label_file(&self, model: &str) -> PathBuf {
-        self.model_dir().join(model).join("label.json")
+    pub fn label_file(&self, catalog: &str, model: &str) -> PathBuf {
+        self.model_dir()
+            .join(catalog)
+            .join(model)
+            .join("label.json")
     }
 
     /// 获取数据库路径
@@ -194,7 +198,7 @@ impl AppParams {
 
     /// 获取日志名称
     pub fn log_dir(&self) -> PathBuf {
-        let mut p = self.dir_with_db("log");
+        let mut p = self.dir_with_db(LOG);
         let mut app_id = self.app.clone();
         if self.group_id > 0 {
             app_id += &self.group_id.to_string();
@@ -271,5 +275,11 @@ mod tests {
         assert_eq!(p.msg_dir(), PathBuf::from("/var/ias/msg/node1/db1"));
         assert_eq!(p.sample_dir(), PathBuf::from("/var/ias/sample/node1/db1"));
         assert_eq!(p.log_dir(), PathBuf::from("/var/ias/log/node1/db1/app9"));
+        assert_eq!(
+            p.label_file("vehicle", "front"),
+            PathBuf::from("/var/ias/model/mod1/vehicle/front/label.json")
+        );
+        assert_eq!(p.group_topic(), "ias/nodes/node1/groups/9");
+        assert_eq!(p.group_msg_topic(), "ias/nodes/node1/groups/9/msg");
     }
 }

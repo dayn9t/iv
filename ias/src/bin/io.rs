@@ -2,7 +2,7 @@ use ias::*;
 use rx::text::*;
 
 fn main() {
-    let a: AlarmInfo = load_json("/home/jiang/rs/iv/ias/data/maa-alarm.json").unwrap();
+    let a: AlarmInfo = load_json("/home/jiang/rs/iv-core/ias/data/maa-alarm.json").unwrap();
 
     let dt1 = a.time.naive_local();
     let dt2 = a.time.with_timezone(&ias::Local).naive_local();
