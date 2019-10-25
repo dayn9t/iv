@@ -1,11 +1,12 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use num::{NumCast, ToPrimitive};
+use serde::{Deserialize, Serialize};
 
 use super::{RectT, SizeT, ValidGeoType};
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct PointT<T: ValidGeoType> {
     pub x: T,
     pub y: T,

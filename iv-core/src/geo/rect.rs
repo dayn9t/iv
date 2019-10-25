@@ -1,8 +1,8 @@
-use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
 use num::{NumCast, ToPrimitive};
+use serde::{Deserialize, Serialize};
 
 use super::{PointT, SizeT, ValidGeoType};
 
@@ -27,7 +27,7 @@ fn partial_max<T: PartialOrd>(a: T, b: T) -> T {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct RectT<T: ValidGeoType> {
     pub x: T,
     pub y: T,
