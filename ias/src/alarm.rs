@@ -162,7 +162,7 @@ impl AlarmInfo {
     }
 
     /// 替换路径前缀
-    pub fn replace_path(&self, src_prefix: &str, dst_prefix: &str) -> AlarmInfo {
+    pub fn replace_path(&self, _src_prefix: &str, _dst_prefix: &str) -> AlarmInfo {
         unimplemented!()
     }
 }

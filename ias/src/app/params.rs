@@ -1,10 +1,8 @@
-use std::path::PathBuf;
-
-//use serde::{Deserialize, Serialize};
-//use rx_core::fs;
 use rx_core::text::*;
 
-use super::app::AppInfo;
+use crate::basic::*;
+
+use super::rx_app::AppInfo;
 
 /// 媒体源ID
 pub type SourceId = i32;

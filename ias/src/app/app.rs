@@ -1,55 +1,42 @@
-/// 包信息
-pub struct PackageInfo {
-    /// 名称
-    pub name: &'static str,
+use rx_net::mqtt::*;
 
-    /// 版本
-    pub version: &'static str,
+use crate::basic::*;
+use crate::cfg::*;
 
-    /// 作者
-    pub authors: &'static str,
+use super::params::*;
 
-    /// 描述信息
-    pub description: &'static str,
-
-    /// 构建日期
-    pub date: &'static str,
-
-    /// SHA
-    pub sha_short: &'static str,
+/// 应用程序
+pub struct Application {
+    params: AppParams,
 }
 
-impl PackageInfo {
-    /// 完整版本信息
-    pub fn full_version(&self) -> String {
-        format!("v{}-{}  build: {}", self.version, self.sha_short, self.date)
+impl Application {
+    /// 创建服务
+    pub fn new(params: AppParams) -> Application {
+        Application { params }
     }
-}
 
-/// 应用程序信息(项目包括多个应用程序)
-pub struct AppInfo {
-    /// 应用程序名称
-    pub name: String,
+    /// 加载配置，搜索顺序：1.节点配置, 2.公共配置
+    pub fn load_cfg<T>(&self, cfg_name: &str) -> IoResult<T>
+    where
+        T: DeserializeOwned,
+    {
+        let cfg_name = cfg_name.to_owned() + ".json";
+        let f = self.params.node_cfg_dir().join(&cfg_name);
+        let mut cfg = load_json(f);
 
-    /// 应用程序表述信息
-    pub about: String,
-
-    /// 包信息
-    pub package: PackageInfo,
-}
-
-impl AppInfo {
-    /// 创建引用程序信息
-    pub fn new(name: &str, about: &str, package: PackageInfo) -> AppInfo {
-        AppInfo {
-            name: name.to_owned(),
-            about: about.to_owned(),
-            package,
+        if cfg.is_err() {
+            let f = self.params.cfg_dir().join(&cfg_name);
+            cfg = load_json(f);
         }
+        cfg
     }
 
-    /// 完整ID
-    pub fn full_name(&self) -> String {
-        self.package.name.to_owned() + "-" + &self.name
+    /// 连接mqtt服务
+    pub fn mqtt_connect(&self) -> MqttClient {
+        let mqtt_cfg: MqttCfg = self.load_cfg("mqtt").unwrap();
+        let client_id = self.params.app_full_name();
+        println!("connect: {}", &mqtt_cfg.server_url);
+        MqttClient::connect(&client_id, &mqtt_cfg.server_url).unwrap()
     }
 }

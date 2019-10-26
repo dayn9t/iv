@@ -3,11 +3,15 @@
 
 pub use alarm::*;
 pub use basic::*;
+pub use cfg::*;
 
 mod alarm;
-pub mod app;
 mod basic;
+mod cfg;
+
+pub mod app;
 pub mod dump;
+pub mod view;
 
 /// 获取包信息
 pub fn package_info() -> app::PackageInfo {
