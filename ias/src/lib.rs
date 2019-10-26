@@ -1,5 +1,4 @@
-//#[macro_use]
-//extern crate serde_derive;
+use rx_core::package_function;
 
 pub use alarm::*;
 pub use basic::*;
@@ -13,17 +12,7 @@ pub mod app;
 pub mod dump;
 pub mod view;
 
-/// 获取包信息
-pub fn package_info() -> app::PackageInfo {
-    app::PackageInfo {
-        name: env!("CARGO_PKG_NAME"),
-        version: env!("CARGO_PKG_VERSION"),
-        authors: env!("CARGO_PKG_AUTHORS"),
-        description: env!("CARGO_PKG_DESCRIPTION"),
-        date: env!("VERGEN_BUILD_DATE"),
-        sha_short: env!("VERGEN_SHA_SHORT"),
-    }
-}
+package_function!(package_info);
 
 #[cfg(test)]
 mod tests {

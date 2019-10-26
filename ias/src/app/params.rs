@@ -1,8 +1,7 @@
+pub use rx_core::app::AppInfo;
 use rx_core::text::*;
 
 use crate::basic::*;
-
-use super::rx_app::AppInfo;
 
 /// 媒体源ID
 pub type SourceId = i32;

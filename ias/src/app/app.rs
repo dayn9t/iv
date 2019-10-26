@@ -6,14 +6,19 @@ use crate::cfg::*;
 use super::params::*;
 
 /// 应用程序
-pub struct Application {
+pub struct App {
     params: AppParams,
 }
 
-impl Application {
+impl App {
     /// 创建服务
-    pub fn new(params: AppParams) -> Application {
-        Application { params }
+    pub fn new(params: AppParams) -> App {
+        App { params }
+    }
+
+    /// 组主题
+    pub fn group_topic(&self) -> String {
+        self.params.group_topic()
     }
 
     /// 加载配置，搜索顺序：1.节点配置, 2.公共配置
@@ -30,6 +35,14 @@ impl Application {
             cfg = load_json(f);
         }
         cfg
+    }
+
+    /// 加载应用程序配置
+    pub fn load_app_cfg<T>(&self) -> IoResult<T>
+    where
+        T: DeserializeOwned,
+    {
+        self.load_cfg(&self.params.app_name())
     }
 
     /// 连接mqtt服务

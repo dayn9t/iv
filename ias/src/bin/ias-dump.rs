@@ -1,6 +1,5 @@
 use ias::app::*;
 use ias::*;
-use rx_core::text::*;
 
 fn main() {
     let app_info = AppInfo::new(
