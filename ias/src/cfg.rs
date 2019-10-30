@@ -10,9 +10,16 @@ pub struct MqttCfg {
     pub root_topic: String,
 }
 
+/// 数据库配置信息
+#[derive(Default, Clone, Serialize, Deserialize)]
+pub struct DbCfg {
+    /// 热数据库URL
+    pub hot_db: String,
+}
+
 /// 存储配置信息
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct DumpCfg {
-    /// 数据库URL
-    pub db_url: String,
+    //// 数据库URL
+//pub db_url: String,
 }

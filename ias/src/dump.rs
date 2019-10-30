@@ -19,12 +19,13 @@ impl DumpService {
 
     /// 启动服务
     pub fn run(&self) {
-        let app_cfg: DumpCfg = self.app.load_app_cfg().unwrap();
-        let mut db = RedisDb::open(&app_cfg.db_url).unwrap();
-        let mut tab = db.open_table("alarm").unwrap();
+        let _app_cfg: DumpCfg = self.app.load_app_cfg().unwrap();
+
+        let mut db = self.app.open_hot_db().unwrap();
+        let mut tab = db.open_table("msg").unwrap();
 
         let mut client = self.app.mqtt_connect();
-        let topic = self.app.group_topic();
+        let topic = self.app.group_topic(); //TODO
         let rx = client.subscribe(&topic).unwrap();
 
         for m in rx {
@@ -33,5 +34,6 @@ impl DumpService {
                 tab.put(info.id, &info).unwrap();
             }
         }
+        //TODO 尝试合并maa & ias
     }
 }
