@@ -1,13 +1,11 @@
-use std::time::SystemTime;
+//use std::time::SystemTime;
 
 use crate::basic::*;
 
 /// 报警类型
 #[derive(Clone, Serialize, Deserialize)]
 pub enum AlarmType {
-
     //通用报警
-
     /// 视频检查：信号丢失
     VideoLoss = 101,
 
@@ -24,7 +22,6 @@ pub enum AlarmType {
     Removal = 122,
 
     //定制报警：ATM机
-
     /// 插卡口异常
     AtmSlot = 401,
 
@@ -48,7 +45,6 @@ pub enum AlarmType {
     CabinThrust = 502,
 
     //定制报警：加钞间
-
     /// 加钞间人数限制
     BackroomNumLimit = 601,
 
@@ -120,7 +116,7 @@ pub struct AlarmInfo {
 
     /// 报警类型
     #[serde(rename = "type")]
-    pub type_: AlarmType,
+    pub type_: i32,
 
     /// 绝对时间
     pub time: UtcDateTime,

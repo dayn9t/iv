@@ -1,13 +1,11 @@
-use std::time::SystemTime;
+//use std::time::SystemTime;
 
 use crate::basic::*;
 
 /// 报警类型
 #[derive(Clone, Serialize, Deserialize)]
 pub enum AlarmType {
-
     //通用报警
-
     /// 视频检查：信号丢失
     VideoLoss = 101,
 
@@ -24,7 +22,6 @@ pub enum AlarmType {
     Removal = 122,
 
     //定制报警：ATM机
-
     /// 插卡口异常
     AtmSlot = 401,
 
@@ -48,7 +45,6 @@ pub enum AlarmType {
     CabinThrust = 502,
 
     //定制报警：加钞间
-
     /// 加钞间人数限制
     BackroomNumLimit = 601,
 
@@ -149,17 +145,17 @@ impl AlarmInfo {
     //pub fn new() -> Self {        AlarmInfo {}    }
 
     /// 获取描述字符串
-    pub fn to_string(&self) -> String {
+    pub fn _to_string(&self) -> String {
         String::new()
     }
 
     /// 获取描述字符串
-    pub fn to_local_string(&self) -> String {
+    pub fn _to_local_string(&self) -> String {
         String::new()
     }
 
     /// 替换路径前缀
-    pub fn replace_path(&self, _src_prefix: &str, _dst_prefix: &str) -> AlarmInfo {
+    pub fn _replace_path(&self, _src_prefix: &str, _dst_prefix: &str) -> AlarmInfo {
         unimplemented!()
     }
 }

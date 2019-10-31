@@ -5,10 +5,8 @@
 // mod instrument;
 // mod vehicle;
 
-
 /// 传感器类型
-pub enum SensorType
-{
+pub enum SensorType {
     /// 正面车辆检测
     Front = 101,
 

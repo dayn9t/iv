@@ -1,3 +1,4 @@
+use ias::adapter::maa;
 use ias::app::*;
 use ias::*;
 
@@ -15,7 +16,7 @@ fn main() {
     println!("group_msg_topic: {}", params.group_msg_topic());
     println!("group_topic: {}", params.group_topic());
 
-    let a: AlarmInfo = load_json("/home/jiang/rs/iv/ias/data/maa-alarm.json").unwrap();
+    let a: maa::AlarmInfo = load_json("/home/jiang/rs/iv/ias/data/maa-alarm.json").unwrap();
     let s = to_json(&a).unwrap();
 
     println!("Json: {}", s);

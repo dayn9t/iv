@@ -1,20 +1,20 @@
 use rx_core::package_function;
 
-pub use alarm::*;
 pub use basic::*;
 pub use cfg::*;
+pub use node::*;
 pub use sensor::*;
 
-mod alarm;
 mod basic;
 mod cfg;
+mod node;
 mod sensor;
 
-pub mod app;
-pub mod scene;
-pub mod dump;
-pub mod view;
 pub mod adapter;
+pub mod app;
+pub mod dump;
+pub mod scene;
+pub mod view;
 
 package_function!(package_info);
 
