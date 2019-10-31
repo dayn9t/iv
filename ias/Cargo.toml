@@ -21,3 +21,5 @@ uuid = { version = "0.6.*", features = ["serde", "v5"] }
 
 clap = "*"
 
+strum = "*"
+strum_macros = "*"

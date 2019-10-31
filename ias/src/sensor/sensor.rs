@@ -11,76 +11,26 @@ using RoiD = iv-core::PointDs;
 */
 
 
-/// 传感器分类
-pub mod category {
-    const none: i32 = 0;
-
-    /// 车辆检测器
-    const vehicle: i32 = 1;
-
-    /// 仪表盘上的仪表
-    const instrument: i32 = 2;
-
-    /// 环境
-    const environment: i32 = 3;
-
-    /// 灾难
-    const disaster: i32 = 4;
-
-    /// 电梯内
-    const elevator: i32 = 5;
-}
 
 
-/// 传感器类型
-mod type_
+
+/// 传感器状态,TODO: 序列化时改成整数值
+pub enum State
 {
-    const none: i32 = 0;
-
-    /// 正面车辆检测
-    const front: i32 = 101;
-
-    /// 侧面车辆检测
-    const side: i32 = 102;
-
-    /// 安培表
-    const ampere: i32 = 211;
-
-    /// 伏特表
-    const voltmeter: i32 = 212;
-
-    /// 温度计
-    const thermometer: i32 = 221;
-
-    /// 液位表
-    const level_gauge: i32 = 231;
-
-    /// 垃圾溢出
-    const overflow: i32 = 311;
-
-    /// 火灾
-    const fire: i32 = 411;
-
-    /// 烟雾
-    const smoke: i32 = 412;
-
-    /// 电梯内自行车
-    const bike: i32 = 511;
-}
-
-
-/// 传感器状态
-mod state
-{
-    const ok: i32 = 0;
     /// 传感器正常
-    const moved: i32 = 1;
+    ok = 0,
+
     /// 传感器位置偏移
-    const occlusion: i32 = 2;
+    moved = 1,
+
     /// 传感器被遮挡
-    const fail: i32 = 3;
+    occlusion = 2,
+
     /// 传感器读取失败
-    const unknown_error: i32 = 99; 	/// 传感器读取失败
+    fail = 3,
+
+    /// 传感器读取失败
+    unknown_error = 99,
 }
 
 
@@ -89,21 +39,16 @@ struct SensorParams
 {
     /// 型号
     model: String,
-
     /// 图片上的感兴趣区域
     roi: RoiD,
-
     /// 灵敏度
     sensitivity: i32,
-
     /// 取值范围
     range: RangeD,
 }
 
 type SensorId = i32;
 
-
-type SensorType = i32;
 
 type SourceId = i32;
 
@@ -112,25 +57,19 @@ struct SensorInfo
 {
     /// 传感器ID
     id: SensorId,
-
     /// 传感器全局ID
     guid: Uuid,
-
     /// 传感器类型
     type_: SensorType,
-
     /// 名称
     name: String,
-
     /// 传感器参数
     params: SensorParams,
     ///Calendar	CalendarTrigger	工作表目前没看出存在的必要	O
 
     /// 关联视频源Id
     source_id: SourceId,
-
     source_guid: Uuid,
-
     /// 允许状态
     enabled: bool,
 }
@@ -221,7 +160,6 @@ struct SensorMsg
 
     /// 视频源信息
     source: SourceInfo,
-
     inner: NetOutputInfo,
 }
 

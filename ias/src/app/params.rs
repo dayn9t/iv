@@ -200,8 +200,8 @@ impl AppParams {
 
     /*
         /// 获取指定传感器样本路径
-        pub fn sample_dir_of(&self, S sensor) -> PathBuf
-        { self.sample_dir().join(sensor.id_dir() }
+        pub fn sample_dir_of(&self, S scene) -> PathBuf
+        { self.sample_dir().join(scene.id_dir() }
     */
     /// 获取录像路径
     pub fn record_dir(&self) -> PathBuf {
