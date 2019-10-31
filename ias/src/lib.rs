@@ -13,6 +13,7 @@ mod sensor;
 pub mod adapter;
 pub mod app;
 pub mod dump;
+pub mod sample;
 pub mod scene;
 pub mod view;
 
