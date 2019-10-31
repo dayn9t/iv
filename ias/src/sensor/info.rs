@@ -24,8 +24,6 @@ pub struct SensorInfo {
     /// 传感器ID
     pub id: SensorId,
 
-    // 传感器全局ID
-    //guid: Uuid,
     /// 传感器类型
     pub type_: i32, //TODO:
 

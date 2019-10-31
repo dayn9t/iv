@@ -23,6 +23,9 @@ type SensorMsgId = i32;
 type SensorId = i32;
 type SourceId = i32;
 
+/// 传感器内部数据
+type SensorInner = i32;
+
 /// 传感器消息
 pub struct SensorMsg {
     /// 消息ID
@@ -45,7 +48,9 @@ pub struct SensorMsg {
 
     /// 视频源信息 ???
     pub source: SourceId,
-    //inner: NetOutputInfo,
+
+    /// 内部数据
+    pub inner: SensorInner,
 }
 
 impl ToUuid for SensorMsg {
