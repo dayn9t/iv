@@ -14,8 +14,9 @@ fn main() -> Result<()> {
     if !opened {
         panic!("Unable to open default camera!");
     }
+
+    let mut frame = Mat::default();
     loop {
-        let mut frame = Mat::default();
         cam.read(&mut frame)?;
         if frame.size()?.width > 0 {
             highgui::imshow(window, &mut frame)?;
