@@ -11,3 +11,5 @@ rx-net = { path = "../../rx/rx-net" }
 
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
+
+opencv = "*"

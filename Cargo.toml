@@ -4,6 +4,6 @@ members = [
     "iv-core",
     "iv-mm",
     "iv-va",
-    "ias",
+    #"ias",
 ]
 
