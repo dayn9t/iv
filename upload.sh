@@ -1,0 +1,1 @@
+/home/jiang/ws/nvidia/gst4rs/upload.sh
