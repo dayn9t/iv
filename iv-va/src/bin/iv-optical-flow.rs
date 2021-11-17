@@ -1,7 +1,7 @@
 use std::time;
 
 use opencv::{core::{self, GpuMat}, cudaimgproc, cudawarping, cudaoptflow, highgui, imgcodecs, imgproc, prelude::*, Result, videoio};
-use opencv::core::{Size, Ptr, Vec2, Point, Scalar, cart_to_polar};
+use opencv::core::{Size, Ptr, Point, Scalar, cart_to_polar};
 use opencv::imgproc::{INTER_LINEAR, line, LINE_8};
 
 /// 光流分析器
@@ -77,8 +77,9 @@ fn draw_flow(flow: &GpuMat, frame: &mut Mat) -> Result<()> {
 
     // TODO: 用小图测试清楚运功矢量的正反
 
+    /*
     for y in 0..flow2.rows() {
-        let row = flow2.at_row::<Vec2<f32>>(y)?;
+        let row = flow2.at_row::<Vec2b<f32>>(y)?;
         //println!("#{:?} row size: {:?}", i, row.len());
         for x in 0..row.len() {
             let r2 = row[x][0] * row[x][0] + row[x][1] * row[x][1];
@@ -115,7 +116,7 @@ fn draw_flow(flow: &GpuMat, frame: &mut Mat) -> Result<()> {
             }
         }
     }
-
+    */
     Ok(())
 }
 
