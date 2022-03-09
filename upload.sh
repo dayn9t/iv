@@ -1,1 +1,1 @@
-/home/jiang/ws/nvidia/gst4rs/upload.sh
+/home/jiang/ws/nvidia/ias-rs/ias-stream/to-n1.sh
