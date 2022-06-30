@@ -43,14 +43,7 @@ pub struct AppParams {
     verbose: u64,
 }
 
-const CFG: &str = "cfg";
-const DB: &str = "db";
-const MSG: &str = "msg";
-const MODEL: &str = "model";
-const LOG: &str = "log";
-const SAMPLE: &str = "sample";
-const RECORD: &str = "record";
-const SNAPSHOT: &str = "snapshot";
+
 
 impl AppParams {
     /// 创建命令行参数
@@ -84,71 +77,6 @@ impl AppParams {
         }
     }
 
-    /// 解析命令行参数
-    pub fn parse_args(app_info: &AppInfo) -> AppParams {
-        use clap::{App, Arg};
-
-        let matches = App::new(app_info.full_name())
-            .version(app_info.package.full_version().as_str())
-            .author(app_info.package.authors)
-            .about(app_info.about.as_str())
-            .arg(
-                Arg::with_name("CONFIG")
-                    .short("c")
-                    .long("config")
-                    .default_value("work")
-                    .help("Sets the config name")
-                    .takes_value(true),
-            )
-            .arg(
-                Arg::with_name("DATABASE")
-                    .short("d")
-                    .long("database")
-                    .default_value("work")
-                    .help("Sets the database name")
-                    .takes_value(true),
-            )
-            .arg(
-                Arg::with_name("MODEL")
-                    .short("m")
-                    .long("model")
-                    .default_value("work")
-                    .help("Sets the model name")
-                    .takes_value(true),
-            )
-            .arg(
-                Arg::with_name("GROUP")
-                    .short("g")
-                    .long("group")
-                    .default_value("0")
-                    .help("Sets the group number")
-                    .takes_value(true),
-            )
-            .arg(
-                Arg::with_name("NODE")
-                    .help("Sets the node to use")
-                    .required(true)
-                    .index(1),
-            )
-            .arg(
-                Arg::with_name("v")
-                    .short("v")
-                    .multiple(true)
-                    .help("Sets the level of verbosity"),
-            )
-            .get_matches();
-
-        let node = matches.value_of("NODE").unwrap();
-        let cfg_name = matches.value_of("CONFIG").unwrap();
-        let model_name = matches.value_of("MODEL").unwrap();
-        let db_name = matches.value_of("DATABASE").unwrap();
-        let group_id = matches.value_of("GROUP").unwrap().parse().unwrap();
-        let verbose = matches.occurrences_of("v");
-
-        AppParams::new(
-            app_info, node, cfg_name, model_name, db_name, group_id, verbose,
-        )
-    }
 
     /// 获取应用程序名
     pub fn app_name(&self) -> String {

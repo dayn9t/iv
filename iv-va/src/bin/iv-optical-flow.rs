@@ -27,7 +27,7 @@ impl OpticalFlowAnalyzer {
         let poly_sigma: f64 = 1.1;
         let flags: i32 = 0;
         #[warn(bare_trait_objects)]
-        let optical_flow = cudaoptflow::CUDA_FarnebackOpticalFlow::create(num_levels, pyr_scale, fast_pyramids, win_size, num_iters, poly_n, poly_sigma, flags)?;
+        let optical_flow = <dyn cudaoptflow::CUDA_FarnebackOpticalFlow>::create(num_levels, pyr_scale, fast_pyramids, win_size, num_iters, poly_n, poly_sigma, flags)?;
         let a = OpticalFlowAnalyzer {
             optical_flow,
             small: GpuMat::default()?,

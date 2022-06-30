@@ -2,7 +2,7 @@
 name = "ias"
 version = "0.1.1"
 authors = ["Howell J. <dayn9t@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [build-dependencies]
 vergen = "3"
