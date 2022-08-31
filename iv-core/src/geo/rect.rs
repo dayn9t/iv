@@ -81,6 +81,14 @@ impl<T: ValidGeoType> RectT<T> {
         PointT::new(self.x, self.y)
     }
 
+    /// 获取右上坐标
+    pub fn right_top(&self) -> PointT<T>
+        where
+            T: ValidGeoType,
+    {
+        PointT::new(self.x + self.width, self.y)
+    }
+
     /// 获取右下坐标
     pub fn right_bottom(&self) -> PointT<T>
         where
@@ -97,13 +105,6 @@ impl<T: ValidGeoType> RectT<T> {
         PointT::new(self.x, self.y + self.height)
     }
 
-    /// 获取右上坐标
-    pub fn right_top(&self) -> PointT<T>
-        where
-            T: ValidGeoType,
-    {
-        PointT::new(self.x + self.width, self.y)
-    }
 
     /// 获取尺寸
     pub fn size(&self) -> SizeT<T>
