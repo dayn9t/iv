@@ -1,1 +1,0 @@
-/home/jiang/ws/nvidia/ias-rs/ias-stream/to-n1.sh
