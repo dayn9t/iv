@@ -152,6 +152,16 @@ impl<T: ValidGeoType> RectT<T> {
     pub fn vertexes(&self) -> Vec<PointT<T>> {
         vec![self.left_top(), self.right_top(), self.right_bottom(), self.left_bottom()]
     }
+
+    /// 获取归一化后的RectT
+    pub fn normalized(&self, size: SizeT<T>) -> Self {
+        Self {
+            x: self.x / size.width,
+            y: self.y / size.height,
+            width: self.width / size.width,
+            height: self.height / size.height,
+        }
+    }
 }
 
 impl<P, R> Add<PointT<P>> for RectT<R>
