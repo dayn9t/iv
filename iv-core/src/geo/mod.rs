@@ -13,6 +13,8 @@ valid_types!(ValidGeoType, i32, i64, f32, f64);
 
 /// 2D点(i32)
 pub type Point = PointT<i32>;
+/// 2D点(i32)
+pub type PointI = PointT<i32>;
 /// 2D点(i64)
 pub type PointL = PointT<i64>;
 /// 2D点(f32)
@@ -31,6 +33,8 @@ pub type PointDs = Vec<PointD>;
 
 /// 2D尺寸(i32)
 pub type Size = SizeT<i32>;
+/// 2D尺寸(i32)
+pub type SizeI = SizeT<i32>;
 /// 2D尺寸(i64)
 pub type SizeL = SizeT<i64>;
 /// 2D尺寸(f32)
@@ -40,6 +44,8 @@ pub type SizeD = SizeT<f64>;
 
 /// 长方形(i32)
 pub type Rect = RectT<i32>;
+/// 长方形(i32)
+pub type RectI = RectT<i32>;
 /// 长方形(i64)
 pub type RectL = RectT<i64>;
 /// 长方形(f32)
