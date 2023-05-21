@@ -18,8 +18,8 @@ impl<T: ValidGeoType> PointT<T> {
     }
 
     pub fn from_size(sz: SizeT<T>) -> Self
-        where
-            T: ValidGeoType,
+    where
+        T: ValidGeoType,
     {
         Self {
             x: sz.width,
@@ -28,8 +28,8 @@ impl<T: ValidGeoType> PointT<T> {
     }
 
     pub fn cross(self, pt: PointT<T>) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -43,8 +43,8 @@ impl<T: ValidGeoType> PointT<T> {
     }
 
     pub fn ddot(self, pt: PointT<T>) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -54,15 +54,15 @@ impl<T: ValidGeoType> PointT<T> {
     }
 
     pub fn inside(self, rect: RectT<T>) -> bool
-        where
-            T: ValidGeoType,
+    where
+        T: ValidGeoType,
     {
         rect.contains(self)
     }
 
     pub fn norm(self) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -70,8 +70,8 @@ impl<T: ValidGeoType> PointT<T> {
     }
 
     pub fn to<D: ValidGeoType + NumCast>(self) -> Option<PointT<D>>
-        where
-            T: ToPrimitive,
+    where
+        T: ToPrimitive,
     {
         Some(PointT {
             x: D::from(self.x)?,
@@ -90,8 +90,8 @@ impl<T: ValidGeoType> From<SizeT<T>> for PointT<T> {
 }
 
 impl<T> Add for PointT<T>
-    where
-        T: ValidGeoType + AddAssign,
+where
+    T: ValidGeoType + AddAssign,
 {
     type Output = PointT<T>;
 
@@ -102,8 +102,8 @@ impl<T> Add for PointT<T>
 }
 
 impl<T> Sub for PointT<T>
-    where
-        T: ValidGeoType + SubAssign,
+where
+    T: ValidGeoType + SubAssign,
 {
     type Output = PointT<T>;
 
@@ -114,8 +114,8 @@ impl<T> Sub for PointT<T>
 }
 
 impl<T> Mul<T> for PointT<T>
-    where
-        T: ValidGeoType + MulAssign,
+where
+    T: ValidGeoType + MulAssign,
 {
     type Output = PointT<T>;
 
@@ -126,8 +126,8 @@ impl<T> Mul<T> for PointT<T>
 }
 
 impl<T> Mul<PointT<T>> for PointT<T>
-    where
-        T: ValidGeoType + MulAssign,
+where
+    T: ValidGeoType + MulAssign,
 {
     type Output = PointT<T>;
 
@@ -139,10 +139,9 @@ impl<T> Mul<PointT<T>> for PointT<T>
     }
 }
 
-
 impl<T> Div<T> for PointT<T>
-    where
-        T: ValidGeoType + DivAssign,
+where
+    T: ValidGeoType + DivAssign,
 {
     type Output = PointT<T>;
 
@@ -153,8 +152,8 @@ impl<T> Div<T> for PointT<T>
 }
 
 impl<T> AddAssign for PointT<T>
-    where
-        T: ValidGeoType + AddAssign,
+where
+    T: ValidGeoType + AddAssign,
 {
     fn add_assign(&mut self, rhs: PointT<T>) {
         self.x += rhs.x;
@@ -163,8 +162,8 @@ impl<T> AddAssign for PointT<T>
 }
 
 impl<T> SubAssign for PointT<T>
-    where
-        T: ValidGeoType + SubAssign,
+where
+    T: ValidGeoType + SubAssign,
 {
     fn sub_assign(&mut self, rhs: PointT<T>) {
         self.x -= rhs.x;
@@ -173,8 +172,8 @@ impl<T> SubAssign for PointT<T>
 }
 
 impl<T> MulAssign<T> for PointT<T>
-    where
-        T: ValidGeoType + MulAssign,
+where
+    T: ValidGeoType + MulAssign,
 {
     fn mul_assign(&mut self, rhs: T) {
         self.x *= rhs;
@@ -183,8 +182,8 @@ impl<T> MulAssign<T> for PointT<T>
 }
 
 impl<T> DivAssign<T> for PointT<T>
-    where
-        T: ValidGeoType + DivAssign,
+where
+    T: ValidGeoType + DivAssign,
 {
     fn div_assign(&mut self, rhs: T) {
         self.x /= rhs;

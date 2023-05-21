@@ -18,8 +18,8 @@ impl<T: ValidGeoType> SizeT<T> {
     }
 
     pub fn from_point(pt: PointT<T>) -> Self
-        where
-            T: ValidGeoType,
+    where
+        T: ValidGeoType,
     {
         Self {
             width: pt.x,
@@ -36,8 +36,8 @@ impl<T: ValidGeoType> SizeT<T> {
     }
 
     pub fn to<D: ValidGeoType + NumCast>(self) -> Option<SizeT<D>>
-        where
-            T: ToPrimitive,
+    where
+        T: ToPrimitive,
     {
         Some(SizeT {
             width: D::from(self.width)?,
@@ -47,8 +47,8 @@ impl<T: ValidGeoType> SizeT<T> {
 }
 
 impl<T> Add for SizeT<T>
-    where
-        T: ValidGeoType + AddAssign,
+where
+    T: ValidGeoType + AddAssign,
 {
     type Output = SizeT<T>;
 
@@ -59,8 +59,8 @@ impl<T> Add for SizeT<T>
 }
 
 impl<T> Sub for SizeT<T>
-    where
-        T: ValidGeoType + SubAssign,
+where
+    T: ValidGeoType + SubAssign,
 {
     type Output = SizeT<T>;
 
@@ -71,8 +71,8 @@ impl<T> Sub for SizeT<T>
 }
 
 impl<T> Mul<T> for SizeT<T>
-    where
-        T: ValidGeoType + MulAssign,
+where
+    T: ValidGeoType + MulAssign,
 {
     type Output = SizeT<T>;
 
@@ -83,8 +83,8 @@ impl<T> Mul<T> for SizeT<T>
 }
 
 impl<T> Div<T> for SizeT<T>
-    where
-        T: ValidGeoType + DivAssign,
+where
+    T: ValidGeoType + DivAssign,
 {
     type Output = SizeT<T>;
 
@@ -95,8 +95,8 @@ impl<T> Div<T> for SizeT<T>
 }
 
 impl<T> AddAssign for SizeT<T>
-    where
-        T: ValidGeoType + AddAssign,
+where
+    T: ValidGeoType + AddAssign,
 {
     fn add_assign(&mut self, rhs: SizeT<T>) {
         self.width += rhs.width;
@@ -105,8 +105,8 @@ impl<T> AddAssign for SizeT<T>
 }
 
 impl<T> SubAssign for SizeT<T>
-    where
-        T: ValidGeoType + SubAssign,
+where
+    T: ValidGeoType + SubAssign,
 {
     fn sub_assign(&mut self, rhs: SizeT<T>) {
         self.width -= rhs.width;
@@ -115,8 +115,8 @@ impl<T> SubAssign for SizeT<T>
 }
 
 impl<T> MulAssign<T> for SizeT<T>
-    where
-        T: ValidGeoType + MulAssign,
+where
+    T: ValidGeoType + MulAssign,
 {
     fn mul_assign(&mut self, rhs: T) {
         self.width *= rhs;
@@ -125,8 +125,8 @@ impl<T> MulAssign<T> for SizeT<T>
 }
 
 impl<T> DivAssign<T> for SizeT<T>
-    where
-        T: ValidGeoType + DivAssign,
+where
+    T: ValidGeoType + DivAssign,
 {
     fn div_assign(&mut self, rhs: T) {
         self.width /= rhs;
