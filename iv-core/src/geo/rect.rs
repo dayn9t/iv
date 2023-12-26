@@ -1,10 +1,11 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
+use geo_types::CoordNum;
 use num::{NumCast, ToPrimitive};
 use serde::{Deserialize, Serialize};
 
-use super::{PointT, SizeT, ValidGeoType};
+use super::{PointT, Polygon, Shape, SizeT};
 
 #[inline(always)]
 fn partial_min<T: PartialOrd>(a: T, b: T) -> T {
@@ -25,15 +26,16 @@ fn partial_max<T: PartialOrd>(a: T, b: T) -> T {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd, Serialize, Deserialize)]
-pub struct RectT<T: ValidGeoType> {
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+pub struct RectT<T: CoordNum> {
     pub x: T,
     pub y: T,
     pub width: T,
     pub height: T,
 }
 
-impl<T: ValidGeoType> RectT<T> {
+impl<T: CoordNum> RectT<T> {
+    /// 构建 - 从左, 上, 右, 下
     pub fn new(x: T, y: T, width: T, height: T) -> Self {
         Self {
             x,
@@ -43,6 +45,17 @@ impl<T: ValidGeoType> RectT<T> {
         }
     }
 
+    /// 构建 - 在原点
+    pub fn zero() -> Self {
+        Self {
+            x: T::zero(),
+            y: T::zero(),
+            width: T::one(),
+            height: T::one(),
+        }
+    }
+
+    /// 构建 - 左上在原点, 边长为1的矩形
     pub fn one() -> Self {
         Self {
             x: T::zero(),
@@ -52,16 +65,18 @@ impl<T: ValidGeoType> RectT<T> {
         }
     }
 
+    /// 构建 - 从左上, 尺寸
     pub fn from_point_size(pt: PointT<T>, sz: SizeT<T>) -> Self
-    where
-        T: ValidGeoType + ValidGeoType,
+        where
+            T: CoordNum + CoordNum,
     {
         Self::new(pt.x, pt.y, sz.width, sz.height)
     }
 
+    /// 构建 - 从(左,上),(右,下)
     pub fn from_points(pt1: PointT<T>, pt2: PointT<T>) -> Self
-    where
-        T: ValidGeoType,
+        where
+            T: CoordNum,
     {
         let x = partial_min(pt1.x, pt2.x);
         let y = partial_min(pt1.y, pt2.y);
@@ -73,71 +88,76 @@ impl<T: ValidGeoType> RectT<T> {
         )
     }
 
+    /// 构建 - 从左,上,右,下
+    pub fn from_ltrb(x0: T, y0: T, x1: T, y1: T) -> Self
+        where
+            T: CoordNum,
+    {
+        Self::new(
+            x0,
+            y0,
+            x1 - x0,
+            y1 - y0,
+        )
+    }
+
+    /// 获取中心
+    fn center(&self) -> PointT<T> {
+        let two = T::one() + T::one();
+        let x = self.x + self.width / two;
+        let y = self.y + self.height / two;
+        PointT { x, y }
+    }
+
     /// 获取左上坐标
     pub fn left_top(&self) -> PointT<T>
-    where
-        T: ValidGeoType,
     {
         PointT::new(self.x, self.y)
     }
 
     /// 获取右上坐标
     pub fn right_top(&self) -> PointT<T>
-    where
-        T: ValidGeoType,
+        where
+            T: CoordNum,
     {
         PointT::new(self.x + self.width, self.y)
     }
 
     /// 获取右下坐标
     pub fn right_bottom(&self) -> PointT<T>
-    where
-        T: ValidGeoType,
+        where
+            T: CoordNum,
     {
         PointT::new(self.x + self.width, self.y + self.height)
     }
 
     /// 获取左下坐标
     pub fn left_bottom(&self) -> PointT<T>
-    where
-        T: ValidGeoType,
+        where
+            T: CoordNum,
     {
         PointT::new(self.x, self.y + self.height)
     }
 
     /// 获取尺寸
     pub fn size(&self) -> SizeT<T>
-    where
-        T: ValidGeoType,
+        where
+            T: CoordNum,
     {
         SizeT::new(self.width, self.height)
     }
 
-    /// 获取面积
-    pub fn area(&self) -> T {
-        self.width * self.height
-    }
 
     /// 判定区域是否为空
     pub fn empty(&self) -> bool {
         self.width <= T::zero() || self.height <= T::zero()
     }
 
-    /// 是否包含
-    pub fn contains(&self, pt: PointT<T>) -> bool
-    where
-        T: ValidGeoType,
-    {
-        self.x <= pt.x
-            && pt.x < self.x + self.width
-            && self.y <= pt.y
-            && pt.y < self.y + self.height
-    }
 
     /// 获取转换类型
-    pub fn to<D: ValidGeoType + NumCast>(&self) -> Option<RectT<D>>
-    where
-        T: ToPrimitive,
+    pub fn to<D: CoordNum + NumCast>(&self) -> Option<RectT<D>>
+        where
+            T: ToPrimitive,
     {
         Some(RectT {
             x: D::from(self.x)?,
@@ -147,15 +167,6 @@ impl<T: ValidGeoType> RectT<T> {
         })
     }
 
-    /// 获取定点坐标
-    pub fn vertexes(&self) -> Vec<PointT<T>> {
-        vec![
-            self.left_top(),
-            self.right_top(),
-            self.right_bottom(),
-            self.left_bottom(),
-        ]
-    }
 
     /// 获取归一化后的RectT
     pub fn normalized(&self, size: SizeT<T>) -> Self {
@@ -168,10 +179,50 @@ impl<T: ValidGeoType> RectT<T> {
     }
 }
 
+impl<T: CoordNum> Shape<T> for RectT<T> {
+    /// 获取面积
+    fn area(&self) -> T {
+        self.width * self.height
+    }
+
+    /// 获取周长
+    fn perimeter(&self) -> T {
+        let two = T::one() + T::one();
+        two * (self.width + self.height)
+    }
+
+    /// 获取重心
+    fn centroid(&self) -> PointT<T> {
+        self.center()
+    }
+
+    /// 是否包含
+    fn contains(&self, pt: &PointT<T>) -> bool
+    {
+        self.x <= pt.x
+            && pt.x < self.x + self.width
+            && self.y <= pt.y
+            && pt.y < self.y + self.height
+    }
+}
+
+impl<T: CoordNum> Polygon<T> for RectT<T> {
+    /// 获取顶点坐标数组
+    fn vertices(&self) -> Vec<PointT<T>> {
+        vec![
+            self.left_top(),
+            self.right_top(),
+            self.right_bottom(),
+            self.left_bottom(),
+        ]
+    }
+}
+
+
 impl<P, R> Add<PointT<P>> for RectT<R>
-where
-    P: ValidGeoType,
-    R: ValidGeoType + AddAssign<P>,
+    where
+        P: CoordNum,
+        R: CoordNum + AddAssign<P>,
 {
     type Output = RectT<R>;
 
@@ -182,9 +233,9 @@ where
 }
 
 impl<P, R> Sub<PointT<P>> for RectT<R>
-where
-    P: ValidGeoType,
-    R: ValidGeoType + SubAssign<P>,
+    where
+        P: CoordNum,
+        R: CoordNum + SubAssign<P>,
 {
     type Output = RectT<R>;
 
@@ -195,9 +246,9 @@ where
 }
 
 impl<S, R> Add<SizeT<S>> for RectT<R>
-where
-    S: ValidGeoType,
-    R: ValidGeoType + AddAssign<S>,
+    where
+        S: CoordNum,
+        R: CoordNum + AddAssign<S>,
 {
     type Output = RectT<R>;
 
@@ -208,9 +259,9 @@ where
 }
 
 impl<S, R> Sub<SizeT<S>> for RectT<R>
-where
-    S: ValidGeoType,
-    R: ValidGeoType + SubAssign<S>,
+    where
+        S: CoordNum,
+        R: CoordNum + SubAssign<S>,
 {
     type Output = RectT<R>;
 
@@ -220,7 +271,7 @@ where
     }
 }
 
-impl<T: ValidGeoType> BitOr for RectT<T> {
+impl<T: CoordNum> BitOr for RectT<T> {
     type Output = RectT<T>;
 
     fn bitor(mut self, rhs: Self) -> Self::Output {
@@ -229,7 +280,7 @@ impl<T: ValidGeoType> BitOr for RectT<T> {
     }
 }
 
-impl<T: ValidGeoType> BitAnd for RectT<T> {
+impl<T: CoordNum> BitAnd for RectT<T> {
     type Output = RectT<T>;
 
     fn bitand(mut self, rhs: Self) -> Self::Output {
@@ -239,9 +290,9 @@ impl<T: ValidGeoType> BitAnd for RectT<T> {
 }
 
 impl<P, R> AddAssign<PointT<P>> for RectT<R>
-where
-    P: ValidGeoType,
-    R: ValidGeoType + AddAssign<P>,
+    where
+        P: CoordNum,
+        R: CoordNum + AddAssign<P>,
 {
     fn add_assign(&mut self, rhs: PointT<P>) {
         self.x += rhs.x;
@@ -250,9 +301,9 @@ where
 }
 
 impl<P, R> SubAssign<PointT<P>> for RectT<R>
-where
-    P: ValidGeoType,
-    R: ValidGeoType + SubAssign<P>,
+    where
+        P: CoordNum,
+        R: CoordNum + SubAssign<P>,
 {
     fn sub_assign(&mut self, rhs: PointT<P>) {
         self.x -= rhs.x;
@@ -261,9 +312,9 @@ where
 }
 
 impl<S, R> AddAssign<SizeT<S>> for RectT<R>
-where
-    S: ValidGeoType,
-    R: ValidGeoType + AddAssign<S>,
+    where
+        S: CoordNum,
+        R: CoordNum + AddAssign<S>,
 {
     fn add_assign(&mut self, rhs: SizeT<S>) {
         self.width += rhs.width;
@@ -272,9 +323,9 @@ where
 }
 
 impl<S, R> SubAssign<SizeT<S>> for RectT<R>
-where
-    S: ValidGeoType,
-    R: ValidGeoType + SubAssign<S>,
+    where
+        S: CoordNum,
+        R: CoordNum + SubAssign<S>,
 {
     fn sub_assign(&mut self, rhs: SizeT<S>) {
         self.width -= rhs.width;
@@ -282,7 +333,7 @@ where
     }
 }
 
-impl<T: ValidGeoType> BitOrAssign for RectT<T> {
+impl<T: CoordNum> BitOrAssign for RectT<T> {
     fn bitor_assign(&mut self, rhs: Self) {
         if self.empty() {
             *self = rhs;
@@ -297,7 +348,7 @@ impl<T: ValidGeoType> BitOrAssign for RectT<T> {
     }
 }
 
-impl<T: ValidGeoType> BitAndAssign for RectT<T> {
+impl<T: CoordNum> BitAndAssign for RectT<T> {
     fn bitand_assign(&mut self, rhs: Self) {
         let x1 = partial_max(self.x, rhs.x);
         let y1 = partial_max(self.y, rhs.y);
@@ -306,7 +357,7 @@ impl<T: ValidGeoType> BitAndAssign for RectT<T> {
         self.x = x1;
         self.y = y1;
         if self.empty() {
-            *self = RectT::default();
+            *self = RectT::zero();
         }
     }
 }
