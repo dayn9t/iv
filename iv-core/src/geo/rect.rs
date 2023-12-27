@@ -2,10 +2,21 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
 use geo_types::CoordNum;
-use num::{NumCast, ToPrimitive};
 use serde::{Deserialize, Serialize};
 
 use super::{PointT, Polygon, Shape, SizeT};
+
+
+/// 不同类型的除法, 用f64计算中间结果
+pub fn div_f64<T1: CoordNum, T2: CoordNum, D: CoordNum>(a: T1, b: T2) -> Option<D> {
+    D::from(a.to_f64()? / b.to_f64()?)
+}
+
+/// 不同类型的乘法, 用f64计算中间结果, 舍入成整数
+pub fn mul_round_f64<T1: CoordNum, T2: CoordNum, D: CoordNum>(a: T1, b: T2) -> Option<D> {
+    let s = a.to_f64()? * b.to_f64()?;
+    D::from(s.round())
+}
 
 #[inline(always)]
 fn partial_min<T: PartialOrd>(a: T, b: T) -> T {
@@ -155,10 +166,7 @@ impl<T: CoordNum> RectT<T> {
 
 
     /// 获取转换类型
-    pub fn to<D: CoordNum + NumCast>(&self) -> Option<RectT<D>>
-        where
-            T: ToPrimitive,
-    {
+    pub fn to<D: CoordNum>(&self) -> Option<RectT<D>> {
         Some(RectT {
             x: D::from(self.x)?,
             y: D::from(self.y)?,
@@ -168,14 +176,22 @@ impl<T: CoordNum> RectT<T> {
     }
 
 
-    /// 获取归一化后的RectT
-    pub fn normalized(&self, size: SizeT<T>) -> Self {
-        Self {
-            x: self.x / size.width,
-            y: self.y / size.height,
-            width: self.width / size.width,
-            height: self.height / size.height,
-        }
+    /// 获取坐标归一化后的RectT
+    pub fn normalized<T1: CoordNum, D: CoordNum>(&self, size: SizeT<T1>) -> Option<RectT<D>> {
+        let x = div_f64(self.x, size.width)?;
+        let y = div_f64(self.y, size.height)?;
+        let width = div_f64(self.width, size.width)?;
+        let height = div_f64(self.height, size.height)?;
+        Some(RectT { x, y, width, height })
+    }
+
+    /// 获取坐标绝对化的RectT
+    pub fn absolutized<T1: CoordNum, D: CoordNum>(&self, size: SizeT<T1>) -> Option<RectT<D>> {
+        let x = mul_round_f64(self.x, size.width)?;
+        let y = mul_round_f64(self.y, size.height)?;
+        let width = mul_round_f64(self.width, size.width)?;
+        let height = mul_round_f64(self.height, size.height)?;
+        Some(RectT { x, y, width, height })
     }
 }
 
@@ -218,7 +234,7 @@ impl<T: CoordNum> Polygon<T> for RectT<T> {
     }
 }
 
-
+/// 平移
 impl<P, R> Add<PointT<P>> for RectT<R>
     where
         P: CoordNum,
@@ -232,6 +248,7 @@ impl<P, R> Add<PointT<P>> for RectT<R>
     }
 }
 
+/// 平移 - 反向
 impl<P, R> Sub<PointT<P>> for RectT<R>
     where
         P: CoordNum,
@@ -289,6 +306,7 @@ impl<T: CoordNum> BitAnd for RectT<T> {
     }
 }
 
+/// 平移
 impl<P, R> AddAssign<PointT<P>> for RectT<R>
     where
         P: CoordNum,
@@ -300,6 +318,7 @@ impl<P, R> AddAssign<PointT<P>> for RectT<R>
     }
 }
 
+/// 平移 - 反向
 impl<P, R> SubAssign<PointT<P>> for RectT<R>
     where
         P: CoordNum,
@@ -311,6 +330,7 @@ impl<P, R> SubAssign<PointT<P>> for RectT<R>
     }
 }
 
+/// 增加尺寸
 impl<S, R> AddAssign<SizeT<S>> for RectT<R>
     where
         S: CoordNum,
@@ -322,6 +342,7 @@ impl<S, R> AddAssign<SizeT<S>> for RectT<R>
     }
 }
 
+/// 增加尺寸 - 反向
 impl<S, R> SubAssign<SizeT<S>> for RectT<R>
     where
         S: CoordNum,
@@ -333,6 +354,7 @@ impl<S, R> SubAssign<SizeT<S>> for RectT<R>
     }
 }
 
+/// 并集
 impl<T: CoordNum> BitOrAssign for RectT<T> {
     fn bitor_assign(&mut self, rhs: Self) {
         if self.empty() {
@@ -348,6 +370,7 @@ impl<T: CoordNum> BitOrAssign for RectT<T> {
     }
 }
 
+/// 交集
 impl<T: CoordNum> BitAndAssign for RectT<T> {
     fn bitand_assign(&mut self, rhs: Self) {
         let x1 = partial_max(self.x, rhs.x);

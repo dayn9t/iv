@@ -1,7 +1,6 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
-use geo_types::CoordNum;
 
-use num::{NumCast, ToPrimitive};
+use geo_types::CoordNum;
 use serde::{Deserialize, Serialize};
 
 use super::{RectT, Shape, SizeT};
@@ -70,10 +69,7 @@ impl<T: CoordNum> PointT<T> {
         (self_x.powi(2) + self_y.powi(2)).sqrt()
     }
 
-    pub fn to<D: CoordNum + NumCast>(self) -> Option<PointT<D>>
-        where
-            T: ToPrimitive,
-    {
+    pub fn to<D: CoordNum>(self) -> Option<PointT<D>> {
         Some(PointT {
             x: D::from(self.x)?,
             y: D::from(self.y)?,
