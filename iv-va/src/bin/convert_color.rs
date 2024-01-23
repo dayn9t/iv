@@ -1,4 +1,9 @@
-use opencv::{highgui, prelude::*, videoio, Result};
+use opencv::{
+    highgui,
+    prelude::*,
+    Result,
+    videoio,
+};
 
 fn main() -> Result<()> {
     let window = "video capture";

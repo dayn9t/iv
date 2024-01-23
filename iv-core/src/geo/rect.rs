@@ -3,38 +3,10 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
 use geo_types::CoordNum;
 use serde::{Deserialize, Serialize};
+use rx_core::m::{partial_min, partial_max, div_f64, mul_round_f64};
 
 use super::{PointT, Polygon, Shape, SizeT};
 
-
-/// 不同类型的除法, 用f64计算中间结果
-pub fn div_f64<T1: CoordNum, T2: CoordNum, D: CoordNum>(a: T1, b: T2) -> Option<D> {
-    D::from(a.to_f64()? / b.to_f64()?)
-}
-
-/// 不同类型的乘法, 用f64计算中间结果, 舍入成整数
-pub fn mul_round_f64<T1: CoordNum, T2: CoordNum, D: CoordNum>(a: T1, b: T2) -> Option<D> {
-    let s = a.to_f64()? * b.to_f64()?;
-    D::from(s.round())
-}
-
-#[inline(always)]
-fn partial_min<T: PartialOrd>(a: T, b: T) -> T {
-    if a <= b {
-        a
-    } else {
-        b
-    }
-}
-
-#[inline(always)]
-fn partial_max<T: PartialOrd>(a: T, b: T) -> T {
-    if b >= a {
-        b
-    } else {
-        a
-    }
-}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -61,8 +33,8 @@ impl<T: CoordNum> RectT<T> {
         Self {
             x: T::zero(),
             y: T::zero(),
-            width: T::one(),
-            height: T::one(),
+            width: T::zero(),
+            height: T::zero(),
         }
     }
 
@@ -74,6 +46,14 @@ impl<T: CoordNum> RectT<T> {
             width: T::one(),
             height: T::one(),
         }
+    }
+
+    /// 构建 - 从尺寸
+    pub fn from_size(sz: SizeT<T>) -> Self
+        where
+            T: CoordNum + CoordNum,
+    {
+        Self::new(T::zero(), T::zero(), sz.width, sz.height)
     }
 
     /// 构建 - 从左上, 尺寸
@@ -113,7 +93,7 @@ impl<T: CoordNum> RectT<T> {
     }
 
     /// 获取中心
-    fn center(&self) -> PointT<T> {
+    pub fn center(&self) -> PointT<T> {
         let two = T::one() + T::one();
         let x = self.x + self.width / two;
         let y = self.y + self.height / two;
@@ -174,6 +154,38 @@ impl<T: CoordNum> RectT<T> {
             height: D::from(self.height)?,
         })
     }
+
+    /// 向四边膨胀指定值
+    pub fn dilate_me(&mut self, n: T) {
+        self.x = self.x - n;
+        self.y = self.y - n;
+        self.width = self.width + n + n;
+        self.height = self.height + n + n;
+    }
+
+    /// 向四边膨胀指定值
+    pub fn dilate(&self, n: T) -> Self {
+        let mut r = *self;
+        r.dilate_me(n);
+        r
+    }
+    /*
+    def erode_me(self, n: Real) -> None:
+        ///向四边腐蚀指定值///
+        self.dilate_me(-n)
+
+    def erode(self, n: Real) -> Self:
+        ///向四边腐蚀指定值///
+        return self.dilate(-n)
+
+    def round_me(self) -> None:
+        ///近似成整数///
+        self.x = round(self.x)
+        self.y = round(self.y)
+        self.width = round(self.width)
+        self.height = round(self.height)
+
+    */
 
 
     /// 获取坐标归一化后的RectT
@@ -418,11 +430,15 @@ mod tests {
 
     #[test]
     fn test_bitor() {
-        let mut r1 = RectT::new(0, 0, 10, 10);
-        assert_eq!(r1 | r1, r1);
+        let mut r10 = RectT::new(0, 0, 10, 10);
+        assert_eq!(r10 | r10, r10);
 
         let r2 = RectT::new(5, 5, 10, 10);
-        r1 |= r2;
-        assert_eq!(r1, RectT::new(0, 0, 15, 15));
+        r10 |= r2;
+        assert_eq!(r10, RectT::new(0, 0, 15, 15));
+
+        let r1 = RectT::one();
+        let r = r1 & r2;
+        let r = r1 & r2;
     }
 }

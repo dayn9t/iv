@@ -75,6 +75,11 @@ impl<T: CoordNum> PointT<T> {
             y: D::from(self.y)?,
         })
     }
+
+    /// 获取 Tuple
+    pub fn to_tuple(&self) -> (T, T) {
+        (self.x, self.y)
+    }
 }
 
 impl<T: CoordNum> From<SizeT<T>> for PointT<T> {
