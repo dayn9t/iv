@@ -1,3 +1,4 @@
+use std::fmt::{Debug};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use geo_types::CoordNum;
@@ -27,10 +28,17 @@ impl<T: CoordNum> SizeT<T> {
         }
     }
 
+    /// 获取简短信息
+    pub fn brief(&self) -> String {
+        format!("{:?}x{:?}", self.width, self.height)
+    }
+
+    /// 获取面积
     pub fn area(self) -> T {
         self.width * self.height
     }
 
+    /// FIXME: 有问题
     pub fn empty(self) -> bool {
         self.width <= T::zero() || self.height <= T::zero()
     }
@@ -42,6 +50,7 @@ impl<T: CoordNum> SizeT<T> {
         })
     }
 }
+
 
 impl<T> Add for SizeT<T>
     where

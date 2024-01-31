@@ -2,11 +2,10 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
 use geo_types::CoordNum;
+use rx_core::m::{div_f64, mul_round_f64, partial_max, partial_min};
 use serde::{Deserialize, Serialize};
-use rx_core::m::{partial_min, partial_max, div_f64, mul_round_f64};
 
 use super::{PointT, Polygon, Shape, SizeT};
-
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]

@@ -74,6 +74,10 @@ pub const SIZE_DL224: Size = Size { width: 224, height: 224 };
 
 /// 深度学习检测器常规尺寸
 pub const SIZE_DL640: Size = Size { width: 640, height: 640 };
+/// 深度学习检测器常规尺寸, 近似16:9, 32对齐
+pub const SIZE_DL640X384: Size = Size { width: 640, height: 384 };
+/// 深度学习检测器常规尺寸, 近似16:9, 32对齐
+pub const SIZE_DL640X352: Size = Size { width: 640, height: 352 };
 
 /// 深度学习检测器常规尺寸
 pub const SIZE_DL720: Size = Size { width: 720, height: 720 };
