@@ -204,6 +204,13 @@ impl<T: CoordNum> RectT<T> {
         let height = mul_round_f64(self.height, size.height)?;
         Some(RectT { x, y, width, height })
     }
+
+    /// 计算交并比
+    pub fn iou(self, other:Self)->f64 {
+        let s0 = (self & other).area().to_f64().unwrap();
+        let s1 = (self | other).area().to_f64().unwrap();
+        if s0 == 0.0 { 0.0 } else { s0 / s1}
+    }
 }
 
 impl<T: CoordNum> Shape<T> for RectT<T> {
