@@ -5,7 +5,7 @@ use geo_types::CoordNum;
 use rx_core::m::{div_f64, mul_round_f64, partial_max, partial_min};
 use serde::{Deserialize, Serialize};
 
-use super::{PointT, Polygon, Shape, SizeT};
+use super::{IPolygon, IShape, PointT, SizeT};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -223,7 +223,7 @@ impl<T: CoordNum> RectT<T> {
     }
 }
 
-impl<T: CoordNum> Shape<T> for RectT<T> {
+impl<T: CoordNum> IShape<T> for RectT<T> {
     /// 获取面积
     fn area(&self) -> T {
         self.width * self.height
@@ -249,7 +249,7 @@ impl<T: CoordNum> Shape<T> for RectT<T> {
     }
 }
 
-impl<T: CoordNum> Polygon<T> for RectT<T> {
+impl<T: CoordNum> IPolygon<T> for RectT<T> {
     /// 获取顶点坐标数组
     fn vertices(&self) -> Vec<PointT<T>> {
         vec![
@@ -453,7 +453,7 @@ mod tests {
         assert_eq!(r10, RectT::new(0, 0, 15, 15));
 
         let r1 = RectT::one();
-        let r = r1 & r2;
-        let r = r1 & r2;
+        let _r = r1 & r2;
+        let _r = r1 & r2;
     }
 }

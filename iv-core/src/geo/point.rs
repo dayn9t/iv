@@ -3,7 +3,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 use geo_types::CoordNum;
 use serde::{Deserialize, Serialize};
 
-use super::{RectT, Shape, SizeT};
+use super::{IShape, RectT, SizeT};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -15,6 +15,20 @@ pub struct PointT<T: CoordNum> {
 impl<T: CoordNum> PointT<T> {
     pub fn new(x: T, y: T) -> Self {
         Self { x, y }
+    }
+
+    pub fn zero() -> Self {
+        Self {
+            x: T::zero(),
+            y: T::zero(),
+        }
+    }
+
+    pub fn one() -> Self {
+        Self {
+            x: T::one(),
+            y: T::one(),
+        }
     }
 
     pub fn from_size(sz: SizeT<T>) -> Self

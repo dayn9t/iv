@@ -2,7 +2,7 @@ use crate::geo::PointT;
 use geo_types::CoordNum;
 
 /// 形状
-pub trait Shape<T: CoordNum> {
+pub trait IShape<T: CoordNum> {
     /// 获取形状多边形面积
     fn area(&self) -> T;
     /// 获取形状周长

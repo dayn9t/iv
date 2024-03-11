@@ -5,7 +5,6 @@ resolver = "2"
 members = [
     "iv-core",
     "iv-mm",
-    "iv-va",
-    #"ias",
+    #"iv-va",
 ]
 
