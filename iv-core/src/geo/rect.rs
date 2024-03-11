@@ -49,24 +49,24 @@ impl<T: CoordNum> RectT<T> {
 
     /// 构建 - 从尺寸
     pub fn from_size(sz: SizeT<T>) -> Self
-        where
-            T: CoordNum + CoordNum,
+    where
+        T: CoordNum + CoordNum,
     {
         Self::new(T::zero(), T::zero(), sz.width, sz.height)
     }
 
     /// 构建 - 从左上, 尺寸
     pub fn from_point_size(pt: PointT<T>, sz: SizeT<T>) -> Self
-        where
-            T: CoordNum + CoordNum,
+    where
+        T: CoordNum + CoordNum,
     {
         Self::new(pt.x, pt.y, sz.width, sz.height)
     }
 
     /// 构建 - 从(左,上),(右,下)
     pub fn from_points(pt1: PointT<T>, pt2: PointT<T>) -> Self
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         let x = partial_min(pt1.x, pt2.x);
         let y = partial_min(pt1.y, pt2.y);
@@ -80,15 +80,10 @@ impl<T: CoordNum> RectT<T> {
 
     /// 构建 - 从左,上,右,下
     pub fn from_ltrb(x0: T, y0: T, x1: T, y1: T) -> Self
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
-        Self::new(
-            x0,
-            y0,
-            x1 - x0,
-            y1 - y0,
-        )
+        Self::new(x0, y0, x1 - x0, y1 - y0)
     }
 
     /// 获取中心
@@ -100,49 +95,46 @@ impl<T: CoordNum> RectT<T> {
     }
 
     /// 获取左上坐标
-    pub fn left_top(&self) -> PointT<T>
-    {
+    pub fn left_top(&self) -> PointT<T> {
         PointT::new(self.x, self.y)
     }
 
     /// 获取右上坐标
     pub fn right_top(&self) -> PointT<T>
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         PointT::new(self.x + self.width, self.y)
     }
 
     /// 获取右下坐标
     pub fn right_bottom(&self) -> PointT<T>
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         PointT::new(self.x + self.width, self.y + self.height)
     }
 
     /// 获取左下坐标
     pub fn left_bottom(&self) -> PointT<T>
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         PointT::new(self.x, self.y + self.height)
     }
 
     /// 获取尺寸
     pub fn size(&self) -> SizeT<T>
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         SizeT::new(self.width, self.height)
     }
-
 
     /// 判定区域是否为空
     pub fn empty(&self) -> bool {
         self.width <= T::zero() || self.height <= T::zero()
     }
-
 
     /// 获取转换类型
     pub fn to<D: CoordNum>(&self) -> Option<RectT<D>> {
@@ -186,14 +178,18 @@ impl<T: CoordNum> RectT<T> {
 
     */
 
-
     /// 获取坐标归一化后的RectT
     pub fn normalized<T1: CoordNum, D: CoordNum>(&self, size: SizeT<T1>) -> Option<RectT<D>> {
         let x = div_f64(self.x, size.width)?;
         let y = div_f64(self.y, size.height)?;
         let width = div_f64(self.width, size.width)?;
         let height = div_f64(self.height, size.height)?;
-        Some(RectT { x, y, width, height })
+        Some(RectT {
+            x,
+            y,
+            width,
+            height,
+        })
     }
 
     /// 获取坐标绝对化的RectT
@@ -202,14 +198,23 @@ impl<T: CoordNum> RectT<T> {
         let y = mul_round_f64(self.y, size.height)?;
         let width = mul_round_f64(self.width, size.width)?;
         let height = mul_round_f64(self.height, size.height)?;
-        Some(RectT { x, y, width, height })
+        Some(RectT {
+            x,
+            y,
+            width,
+            height,
+        })
     }
 
     /// 计算交并比
     pub fn iou(self, other: Self) -> f64 {
         let s0 = (self & other).area().to_f64().unwrap();
         let s1 = (self | other).area().to_f64().unwrap();
-        if s0 == 0.0 { 0.0 } else { s0 / s1 }
+        if s0 == 0.0 {
+            0.0
+        } else {
+            s0 / s1
+        }
     }
 
     /// 宽高比
@@ -235,9 +240,8 @@ impl<T: CoordNum> Shape<T> for RectT<T> {
         self.center()
     }
 
-    /// 是否包含
-    fn contains(&self, pt: &PointT<T>) -> bool
-    {
+    /// 判定是否包含指定点
+    fn contains(&self, pt: &PointT<T>) -> bool {
         self.x <= pt.x
             && pt.x < self.x + self.width
             && self.y <= pt.y
@@ -259,9 +263,9 @@ impl<T: CoordNum> Polygon<T> for RectT<T> {
 
 /// 平移
 impl<P, R> Add<PointT<P>> for RectT<R>
-    where
-        P: CoordNum,
-        R: CoordNum + AddAssign<P>,
+where
+    P: CoordNum,
+    R: CoordNum + AddAssign<P>,
 {
     type Output = RectT<R>;
 
@@ -273,9 +277,9 @@ impl<P, R> Add<PointT<P>> for RectT<R>
 
 /// 平移 - 反向
 impl<P, R> Sub<PointT<P>> for RectT<R>
-    where
-        P: CoordNum,
-        R: CoordNum + SubAssign<P>,
+where
+    P: CoordNum,
+    R: CoordNum + SubAssign<P>,
 {
     type Output = RectT<R>;
 
@@ -286,9 +290,9 @@ impl<P, R> Sub<PointT<P>> for RectT<R>
 }
 
 impl<S, R> Add<SizeT<S>> for RectT<R>
-    where
-        S: CoordNum,
-        R: CoordNum + AddAssign<S>,
+where
+    S: CoordNum,
+    R: CoordNum + AddAssign<S>,
 {
     type Output = RectT<R>;
 
@@ -299,9 +303,9 @@ impl<S, R> Add<SizeT<S>> for RectT<R>
 }
 
 impl<S, R> Sub<SizeT<S>> for RectT<R>
-    where
-        S: CoordNum,
-        R: CoordNum + SubAssign<S>,
+where
+    S: CoordNum,
+    R: CoordNum + SubAssign<S>,
 {
     type Output = RectT<R>;
 
@@ -331,9 +335,9 @@ impl<T: CoordNum> BitAnd for RectT<T> {
 
 /// 平移
 impl<P, R> AddAssign<PointT<P>> for RectT<R>
-    where
-        P: CoordNum,
-        R: CoordNum + AddAssign<P>,
+where
+    P: CoordNum,
+    R: CoordNum + AddAssign<P>,
 {
     fn add_assign(&mut self, rhs: PointT<P>) {
         self.x += rhs.x;
@@ -343,9 +347,9 @@ impl<P, R> AddAssign<PointT<P>> for RectT<R>
 
 /// 平移 - 反向
 impl<P, R> SubAssign<PointT<P>> for RectT<R>
-    where
-        P: CoordNum,
-        R: CoordNum + SubAssign<P>,
+where
+    P: CoordNum,
+    R: CoordNum + SubAssign<P>,
 {
     fn sub_assign(&mut self, rhs: PointT<P>) {
         self.x -= rhs.x;
@@ -355,9 +359,9 @@ impl<P, R> SubAssign<PointT<P>> for RectT<R>
 
 /// 增加尺寸
 impl<S, R> AddAssign<SizeT<S>> for RectT<R>
-    where
-        S: CoordNum,
-        R: CoordNum + AddAssign<S>,
+where
+    S: CoordNum,
+    R: CoordNum + AddAssign<S>,
 {
     fn add_assign(&mut self, rhs: SizeT<S>) {
         self.width += rhs.width;
@@ -367,9 +371,9 @@ impl<S, R> AddAssign<SizeT<S>> for RectT<R>
 
 /// 增加尺寸 - 反向
 impl<S, R> SubAssign<SizeT<S>> for RectT<R>
-    where
-        S: CoordNum,
-        R: CoordNum + SubAssign<S>,
+where
+    S: CoordNum,
+    R: CoordNum + SubAssign<S>,
 {
     fn sub_assign(&mut self, rhs: SizeT<S>) {
         self.width -= rhs.width;

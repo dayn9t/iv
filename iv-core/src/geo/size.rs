@@ -1,4 +1,4 @@
-use std::fmt::{Debug};
+use std::fmt::Debug;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use geo_types::CoordNum;
@@ -19,8 +19,8 @@ impl<T: CoordNum> SizeT<T> {
     }
 
     pub fn from_point(pt: PointT<T>) -> Self
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         Self {
             width: pt.x,
@@ -51,10 +51,9 @@ impl<T: CoordNum> SizeT<T> {
     }
 }
 
-
 impl<T> Add for SizeT<T>
-    where
-        T: CoordNum + AddAssign,
+where
+    T: CoordNum + AddAssign,
 {
     type Output = SizeT<T>;
 
@@ -65,8 +64,8 @@ impl<T> Add for SizeT<T>
 }
 
 impl<T> Sub for SizeT<T>
-    where
-        T: CoordNum + SubAssign,
+where
+    T: CoordNum + SubAssign,
 {
     type Output = SizeT<T>;
 
@@ -77,8 +76,8 @@ impl<T> Sub for SizeT<T>
 }
 
 impl<T> Mul<T> for SizeT<T>
-    where
-        T: CoordNum + MulAssign,
+where
+    T: CoordNum + MulAssign,
 {
     type Output = SizeT<T>;
 
@@ -89,8 +88,8 @@ impl<T> Mul<T> for SizeT<T>
 }
 
 impl<T> Div<T> for SizeT<T>
-    where
-        T: CoordNum + DivAssign,
+where
+    T: CoordNum + DivAssign,
 {
     type Output = SizeT<T>;
 
@@ -101,8 +100,8 @@ impl<T> Div<T> for SizeT<T>
 }
 
 impl<T> AddAssign for SizeT<T>
-    where
-        T: CoordNum + AddAssign,
+where
+    T: CoordNum + AddAssign,
 {
     fn add_assign(&mut self, rhs: SizeT<T>) {
         self.width += rhs.width;
@@ -111,8 +110,8 @@ impl<T> AddAssign for SizeT<T>
 }
 
 impl<T> SubAssign for SizeT<T>
-    where
-        T: CoordNum + SubAssign,
+where
+    T: CoordNum + SubAssign,
 {
     fn sub_assign(&mut self, rhs: SizeT<T>) {
         self.width -= rhs.width;
@@ -121,8 +120,8 @@ impl<T> SubAssign for SizeT<T>
 }
 
 impl<T> MulAssign<T> for SizeT<T>
-    where
-        T: CoordNum + MulAssign,
+where
+    T: CoordNum + MulAssign,
 {
     fn mul_assign(&mut self, rhs: T) {
         self.width *= rhs;
@@ -131,8 +130,8 @@ impl<T> MulAssign<T> for SizeT<T>
 }
 
 impl<T> DivAssign<T> for SizeT<T>
-    where
-        T: CoordNum + DivAssign,
+where
+    T: CoordNum + DivAssign,
 {
     fn div_assign(&mut self, rhs: T) {
         self.width /= rhs;

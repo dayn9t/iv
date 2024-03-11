@@ -18,8 +18,8 @@ impl<T: CoordNum> PointT<T> {
     }
 
     pub fn from_size(sz: SizeT<T>) -> Self
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         Self {
             x: sz.width,
@@ -28,8 +28,8 @@ impl<T: CoordNum> PointT<T> {
     }
 
     pub fn cross(self, pt: PointT<T>) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -43,8 +43,8 @@ impl<T: CoordNum> PointT<T> {
     }
 
     pub fn ddot(self, pt: PointT<T>) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -54,15 +54,15 @@ impl<T: CoordNum> PointT<T> {
     }
 
     pub fn inside(self, rect: &RectT<T>) -> bool
-        where
-            T: CoordNum,
+    where
+        T: CoordNum,
     {
         rect.contains(&self)
     }
 
     pub fn norm(self) -> f64
-        where
-            f64: From<T>,
+    where
+        f64: From<T>,
     {
         let self_x: f64 = From::from(self.x);
         let self_y: f64 = From::from(self.y);
@@ -92,8 +92,8 @@ impl<T: CoordNum> From<SizeT<T>> for PointT<T> {
 }
 
 impl<T> Add for PointT<T>
-    where
-        T: CoordNum + AddAssign,
+where
+    T: CoordNum + AddAssign,
 {
     type Output = PointT<T>;
 
@@ -104,8 +104,8 @@ impl<T> Add for PointT<T>
 }
 
 impl<T> Sub for PointT<T>
-    where
-        T: CoordNum + SubAssign,
+where
+    T: CoordNum + SubAssign,
 {
     type Output = PointT<T>;
 
@@ -116,8 +116,8 @@ impl<T> Sub for PointT<T>
 }
 
 impl<T> Mul<T> for PointT<T>
-    where
-        T: CoordNum + MulAssign,
+where
+    T: CoordNum + MulAssign,
 {
     type Output = PointT<T>;
 
@@ -128,8 +128,8 @@ impl<T> Mul<T> for PointT<T>
 }
 
 impl<T> Mul<PointT<T>> for PointT<T>
-    where
-        T: CoordNum + MulAssign,
+where
+    T: CoordNum + MulAssign,
 {
     type Output = PointT<T>;
 
@@ -142,8 +142,8 @@ impl<T> Mul<PointT<T>> for PointT<T>
 }
 
 impl<T> Div<T> for PointT<T>
-    where
-        T: CoordNum + DivAssign,
+where
+    T: CoordNum + DivAssign,
 {
     type Output = PointT<T>;
 
@@ -154,8 +154,8 @@ impl<T> Div<T> for PointT<T>
 }
 
 impl<T> AddAssign for PointT<T>
-    where
-        T: CoordNum + AddAssign,
+where
+    T: CoordNum + AddAssign,
 {
     fn add_assign(&mut self, rhs: PointT<T>) {
         self.x += rhs.x;
@@ -164,8 +164,8 @@ impl<T> AddAssign for PointT<T>
 }
 
 impl<T> SubAssign for PointT<T>
-    where
-        T: CoordNum + SubAssign,
+where
+    T: CoordNum + SubAssign,
 {
     fn sub_assign(&mut self, rhs: PointT<T>) {
         self.x -= rhs.x;
@@ -174,8 +174,8 @@ impl<T> SubAssign for PointT<T>
 }
 
 impl<T> MulAssign<T> for PointT<T>
-    where
-        T: CoordNum + MulAssign,
+where
+    T: CoordNum + MulAssign,
 {
     fn mul_assign(&mut self, rhs: T) {
         self.x *= rhs;
@@ -184,8 +184,8 @@ impl<T> MulAssign<T> for PointT<T>
 }
 
 impl<T> DivAssign<T> for PointT<T>
-    where
-        T: CoordNum + DivAssign,
+where
+    T: CoordNum + DivAssign,
 {
     fn div_assign(&mut self, rhs: T) {
         self.x /= rhs;

@@ -1,5 +1,5 @@
-use geo_types::CoordNum;
 use crate::geo::PointT;
+use geo_types::CoordNum;
 
 /// 形状
 pub trait Shape<T: CoordNum> {
