@@ -2,7 +2,7 @@ use geo::{Contains, GeoNum};
 use geo_types::{Coord, CoordNum, LineString, Polygon};
 use rx_core::serde_export::{Deserialize, Serialize};
 
-use crate::geo::{IShape, PointT};
+use crate::geo::{IShape, PointT, SizeT};
 
 /// 多边形
 pub trait IPolygon<T: CoordNum>: IShape<T> {
@@ -32,9 +32,30 @@ pub fn to_geo_point<T: CoordNum>(p: &PointT<T>) -> geo::Point<T> {
 pub struct PolygonT<T: CoordNum>(Vec<PointT<T>>);
 
 impl<T: GeoNum> PolygonT<T> {
+    /// 获取顶点集合引用
+    pub fn vertices_ref(&self) -> &Vec<PointT<T>> {
+        &self.0
+    }
+
     /// 转换成 ::geo 类型
     pub fn to_geo(&self) -> Polygon<T> {
         Polygon::<T>::new(to_line_string(&self.0), vec![])
+    }
+
+    /// 获取坐标归一化PolygonT
+    pub fn normalized<T1: CoordNum, D: GeoNum>(&self, size: SizeT<T1>) -> Option<PolygonT<D>> {
+        let ps: Vec<PointT<D>> = self.0.iter().map(|p| p.normalized(size).unwrap()).collect();
+        Some(PolygonT::from(ps))
+    }
+
+    /// 获取坐标绝对化的PolygonT
+    pub fn absolutized<T1: CoordNum, D: GeoNum>(&self, size: SizeT<T1>) -> Option<PolygonT<D>> {
+        let ps: Vec<PointT<D>> = self
+            .0
+            .iter()
+            .map(|p| p.absolutized(size).unwrap())
+            .collect();
+        Some(PolygonT::from(ps))
     }
 }
 
@@ -72,10 +93,13 @@ impl<T: GeoNum> IShape<T> for PolygonT<T> {
 
 pub type PolygonF = PolygonT<f32>;
 
+pub type PolygonI = PolygonT<i32>;
+
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::geo::PointF;
+
+    use super::*;
 
     #[test]
     fn it_works() {

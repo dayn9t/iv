@@ -1,6 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use geo_types::CoordNum;
+use rx_core::m::{div_f64, mul_round_f64};
 use serde::{Deserialize, Serialize};
 
 use super::{IShape, RectT, SizeT};
@@ -93,6 +94,20 @@ impl<T: CoordNum> PointT<T> {
     /// 获取 Tuple
     pub fn to_tuple(&self) -> (T, T) {
         (self.x, self.y)
+    }
+
+    /// 获取坐标归一化PointT
+    pub fn normalized<T1: CoordNum, D: CoordNum>(&self, size: SizeT<T1>) -> Option<PointT<D>> {
+        let x = div_f64(self.x, size.width)?;
+        let y = div_f64(self.y, size.height)?;
+        Some(PointT { x, y })
+    }
+
+    /// 获取坐标绝对化的PointT
+    pub fn absolutized<T1: CoordNum, D: CoordNum>(&self, size: SizeT<T1>) -> Option<PointT<D>> {
+        let x = mul_round_f64(self.x, size.width)?;
+        let y = mul_round_f64(self.y, size.height)?;
+        Some(PointT { x, y })
     }
 }
 
