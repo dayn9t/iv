@@ -1,9 +1,11 @@
+pub use normalize::*;
 pub use point::*;
 pub use polygon::*;
 pub use rect::*;
 pub use shape::*;
 pub use size::*;
 
+mod normalize;
 mod point;
 mod polygon;
 mod rect;

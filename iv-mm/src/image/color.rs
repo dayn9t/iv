@@ -10,6 +10,20 @@ impl Rgb {
         Self(r, g, b)
     }
 
+    /// 获取红色分量
+    pub fn r(&self) -> u8 {
+        self.0
+    }
+
+    /// 获取绿色分量
+    pub fn g(&self) -> u8 {
+        self.1
+    }
+
+    /// 获取蓝色分量
+    pub fn b(&self) -> u8 {
+        self.2
+    }
     /// 获取 [R, G, B]
     pub fn rgb(&self) -> [u8; 3] {
         [self.0, self.1, self.2]

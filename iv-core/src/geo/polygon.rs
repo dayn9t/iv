@@ -1,4 +1,5 @@
-use geo::{Contains, GeoNum};
+use geo::Contains;
+pub use geo::GeoNum;
 use geo_types::{Coord, CoordNum, LineString, Polygon};
 use rx_core::serde_export::{Deserialize, Serialize};
 
@@ -62,6 +63,12 @@ impl<T: GeoNum> PolygonT<T> {
 impl<T: GeoNum> From<Vec<PointT<T>>> for PolygonT<T> {
     fn from(vertices: Vec<PointT<T>>) -> Self {
         Self(vertices)
+    }
+}
+
+impl<T: GeoNum> Into<Vec<PointT<T>>> for PolygonT<T> {
+    fn into(self) -> Vec<PointT<T>> {
+        self.0
     }
 }
 
