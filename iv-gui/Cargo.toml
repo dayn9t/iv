@@ -1,0 +1,19 @@
+[package]
+name = "iv-gui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+iv-mm = { path = "../iv-mm" }
+iv-core = { path = "../iv-core" }
+
+rx-core = { path = "../../rx/rx-core" }
+
+image = "*"
+
+tracing = "*"
+anyhow = "*"
+thiserror = "*"
+path_macro = "*"
+
+opencv = { version = "*", default-features = false, features = ["imgproc", "highgui"] }
