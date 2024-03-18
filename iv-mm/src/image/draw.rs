@@ -1,8 +1,9 @@
+use std::cmp::max;
+
 use image::RgbImage;
 use opencv::imgproc::{
-    ellipse, get_font_scale_from_height, get_text_size, polylines, put_text, rectangle, LINE_8,
+    ellipse, get_font_scale_from_height, polylines, put_text, rectangle, LINE_8,
 };
-use std::cmp::max;
 
 use iv_core::geo::{PointF, PolygonF, PolygonI};
 pub use iv_core::geo::{Size, ToAcRect};

@@ -32,7 +32,7 @@ fn main() {
     let p = PointF::new(0.2, 0.2);
     draw_text(&mut canvas, "hello", p, YELLOW, 1, 0.8);
     //draw_box(&mut canvas, r, "Hello\nIt's me", 16, BLUE, 2, false);
-    draw_box(&mut canvas, r, "Hello\nIt's me", 12, BLUE, 2, true);
+    draw_box(&mut canvas, r, "Hello\nIt's me", 12, BLUE, 2, false);
 
     highgui::imshow(window, &mat1).unwrap();
     let _key = highgui::wait_key(0).unwrap();
