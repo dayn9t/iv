@@ -9,7 +9,8 @@ use iv_core::geo::{PointF, PolygonF, PolygonI};
 pub use iv_core::geo::{Size, ToAcRect};
 
 pub use crate::image::color::Rgb;
-use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color_bgr, cv_points, image_as_mat};
+use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color, cv_points, image_as_mat};
+use crate::image::WHITE;
 
 pub fn image_size(image: &RgbImage) -> Size {
     Size {
@@ -22,7 +23,7 @@ pub fn image_size(image: &RgbImage) -> Size {
 pub fn draw_rect(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickness: i32) {
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
-    let color = cv_color_bgr(color);
+    let color = cv_color(color);
     let mut mat = image_as_mat(canvas);
 
     rectangle(&mut mat, rect, color, thickness, LINE_8, 0).unwrap();
@@ -33,7 +34,7 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
     let center = cv::rect_center(rect);
-    let color = cv_color_bgr(color);
+    let color = cv_color(color);
     let mut mat = image_as_mat(canvas);
 
     ellipse(
@@ -54,7 +55,7 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
 /// 绘制多边形
 pub fn draw_polygon(canvas: &mut RgbImage, polygon: &PolygonF, color: Rgb, thickness: i32) {
     let size = image_size(canvas);
-    let color = cv_color_bgr(color);
+    let color = cv_color(color);
     let mut mat = image_as_mat(canvas);
     let polygon: PolygonI = polygon.absolutized(size).unwrap();
     let points = cv_points(polygon.into());
@@ -73,7 +74,7 @@ pub fn draw_text(
 ) {
     let size = image_size(canvas);
     let left_bottom = cv_ac_point(left_bottom, size);
-    let color = cv_color_bgr(color);
+    let color = cv_color(color);
     let mut mat = image_as_mat(canvas);
     put_text(
         &mut mat,
@@ -89,26 +90,6 @@ pub fn draw_text(
     .unwrap();
 }
 
-/*
-def draw_boxi(image: ImageNda, rect: Rect, color: Color, label: str = '', thickness: int = 0) -> None:
-    """绘制带标签的矩形框(整数坐标)"""
-    # TODO: 移除cv2调用
-    bgr = image.data()
-    tl = thickness or round(0.002 * (bgr.shape[0] + bgr.shape[1]) / 2) + 1
-    c1, c2 = (rect.x, rect.y), (rect.x + rect.width, rect.y + rect.height)
-    cv2.rectangle(bgr, c1, c2, color.bgr(), thickness=tl, lineType=cv2.LINE_AA)
-    if label:
-        tf = max(tl - 1, 1)  # font thickness
-        t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
-        # c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
-        c2 = c1[0] + t_size[0], c1[1] + t_size[1] + 3
-        cv2.rectangle(bgr, c1, c2, color.bgr(), -1, cv2.LINE_AA)  # filled
-        color = color.inverse()
-        # cv2.putText(bgr, label, (c1[0], c1[1] - 2), 0, tl / 3, color, thickness=tf, lineType=cv2.LINE_AA)
-        cv2.putText(bgr, label, (c1[0], c1[1] - 2 + t_size[1] + 3), 0, tl / 3, color.bgr(), thickness=tf,
-                    lineType=cv2.LINE_AA)
-
-*/
 // 绘制带标签的矩形框(整数坐标)
 pub fn draw_box(
     canvas: &mut RgbImage,
@@ -121,7 +102,7 @@ pub fn draw_box(
 ) {
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
-    let color = cv_color_bgr(color);
+    let color = cv_color(color);
     let mut mat = image_as_mat(canvas);
 
     rectangle(&mut mat, rect, color, thickness, LINE_8, 0).unwrap();
@@ -150,7 +131,7 @@ pub fn draw_box(
                 start_pos,
                 font_face,
                 font_scale,
-                color,
+                cv_color(WHITE),
                 text_thickness,
                 LINE_8,
                 false,

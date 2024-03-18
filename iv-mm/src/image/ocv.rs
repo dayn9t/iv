@@ -49,7 +49,7 @@ pub fn cv_ac_rect(r: impl ToAcRect, size: Size) -> cv::Rect {
 
 /// 颜色转换为CV类型
 pub fn cv_color(rgb: Rgb) -> cv::Scalar {
-    cv::Scalar::new(rgb.b() as f64, rgb.g() as f64, rgb.r() as f64, 0.0)
+    cv::Scalar::new(rgb.r() as f64, rgb.g() as f64, rgb.b() as f64, 0.0)
 }
 
 /// 颜色转换为CV类型, RGB=>BGR
