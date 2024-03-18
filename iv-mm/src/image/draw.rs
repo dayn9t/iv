@@ -1,6 +1,8 @@
-use std::cmp::max;
 use image::RgbImage;
-use opencv::imgproc::{ellipse, get_font_scale_from_height, get_text_size, LINE_8, polylines, put_text, rectangle};
+use opencv::imgproc::{
+    ellipse, get_font_scale_from_height, get_text_size, polylines, put_text, rectangle, LINE_8,
+};
+use std::cmp::max;
 
 use iv_core::geo::{PointF, PolygonF, PolygonI};
 pub use iv_core::geo::{Size, ToAcRect};
@@ -45,7 +47,7 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
         LINE_8,
         0,
     )
-        .unwrap();
+    .unwrap();
 }
 
 /// 绘制多边形
@@ -60,12 +62,30 @@ pub fn draw_polygon(canvas: &mut RgbImage, polygon: &PolygonF, color: Rgb, thick
 }
 
 /// 显示文字
-pub fn draw_text(canvas: &mut RgbImage, text: &str, left_bottom: PointF, color: Rgb, thickness: i32, scale: f64) {
+pub fn draw_text(
+    canvas: &mut RgbImage,
+    text: &str,
+    left_bottom: PointF,
+    color: Rgb,
+    thickness: i32,
+    scale: f64,
+) {
     let size = image_size(canvas);
     let left_bottom = cv_ac_point(left_bottom, size);
     let color = cv_color_bgr(color);
     let mut mat = image_as_mat(canvas);
-    put_text(&mut mat, text, left_bottom, 0, scale, color, thickness, LINE_8, false).unwrap();
+    put_text(
+        &mut mat,
+        text,
+        left_bottom,
+        0,
+        scale,
+        color,
+        thickness,
+        LINE_8,
+        false,
+    )
+    .unwrap();
 }
 
 /*
@@ -89,7 +109,15 @@ def draw_boxi(image: ImageNda, rect: Rect, color: Color, label: str = '', thickn
 
 */
 // 绘制带标签的矩形框(整数坐标)
-pub fn draw_box(canvas: &mut RgbImage, rect: impl ToAcRect, label: &str, font_height: i32, color: Rgb, thickness: i32) {
+pub fn draw_box(
+    canvas: &mut RgbImage,
+    rect: impl ToAcRect,
+    label: &str,
+    font_height: i32,
+    color: Rgb,
+    thickness: i32,
+    down_to_up: bool,
+) {
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
     let color = cv_color_bgr(color);
@@ -100,20 +128,37 @@ pub fn draw_box(canvas: &mut RgbImage, rect: impl ToAcRect, label: &str, font_he
     let font_face = 0;
 
     if !label.is_empty() {
-        let line_space = font_height;
+        let line_space = font_height / 2;
         let text_thickness = max(thickness / 2, 1);
-        let font_scale = get_font_scale_from_height(font_face, font_height, text_thickness).unwrap();
-        let mut base_line = 0;
-        let size = get_text_size(label, font_face, font_scale, thickness, &mut base_line).unwrap();
-        let mut left_bottom = cv::Point::new(rect.x + line_space, rect.y + line_space + size.height);
+        let font_scale =
+            get_font_scale_from_height(font_face, font_height, text_thickness).unwrap();
+        let dy = line_space + font_height;
+        let (mut start_pos, dy) = if down_to_up {
+            (
+                cv::Point::new(rect.x + line_space, rect.y + rect.height - line_space),
+                -dy,
+            )
+        } else {
+            (cv::Point::new(rect.x + line_space, rect.y + dy), dy)
+        };
 
         for text in label.split('\n') {
-            put_text(&mut mat, text, left_bottom, font_face, font_scale, color, text_thickness, LINE_8, false).unwrap();
-            left_bottom.y += line_space + size.height;
+            put_text(
+                &mut mat,
+                text,
+                start_pos,
+                font_face,
+                font_scale,
+                color,
+                text_thickness,
+                LINE_8,
+                false,
+            )
+            .unwrap();
+            start_pos.y += dy;
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -124,7 +169,7 @@ mod tests {
 
     use iv_core::geo::{IPolygon, RectF};
 
-    use crate::image::{GREEN, load_image, RED, YELLOW};
+    use crate::image::{load_image, GREEN, RED, YELLOW};
 
     use super::*;
 

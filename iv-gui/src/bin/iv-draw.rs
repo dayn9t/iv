@@ -1,6 +1,9 @@
 use iv_core::geo::{IPolygon, PointF, PolygonF, RectF};
 use iv_mm::image::ocv::image_as_mat;
-use iv_mm::image::{draw_ellipse, draw_polygon, draw_rect, load_image, GREEN, RED, YELLOW, draw_text, draw_box, BLUE};
+use iv_mm::image::{
+    draw_box, draw_ellipse, draw_polygon, draw_rect, draw_text, load_image, BLUE, GREEN, RED,
+    YELLOW,
+};
 use opencv::core::{MatTrait, Scalar};
 use opencv::highgui;
 use std::path::PathBuf;
@@ -28,7 +31,8 @@ fn main() {
     draw_polygon(&mut canvas, &poly, GREEN, 1);
     let p = PointF::new(0.2, 0.2);
     draw_text(&mut canvas, "hello", p, YELLOW, 1, 0.8);
-    draw_box(&mut canvas, r, "Hello\nIt's me\nhaha", 16, BLUE, 2);
+    //draw_box(&mut canvas, r, "Hello\nIt's me", 16, BLUE, 2, false);
+    draw_box(&mut canvas, r, "Hello\nIt's me", 12, BLUE, 2, true);
 
     highgui::imshow(window, &mat1).unwrap();
     let _key = highgui::wait_key(0).unwrap();

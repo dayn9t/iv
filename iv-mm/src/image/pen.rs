@@ -1,13 +1,13 @@
+use crate::image::{Rgb, BLACK, BLUE, CYAN, GRAY, GREEN, ORANGE, PURPLE, RED, WHITE, YELLOW};
 use std::fmt;
 use std::fmt::Display;
-use crate::image::{BLACK, BLUE, CYAN, GRAY, GREEN, ORANGE, PURPLE, RED, Rgb, WHITE, YELLOW};
 
 /// 画笔
 #[derive(Copy, Clone, Debug, Default, PartialEq)] //, Serialize, Deserialize
 pub struct Pen(Rgb, i32);
 
 impl Pen {
-    pub fn new(color: Rgb, thickness:i32) -> Self {
+    pub fn new(color: Rgb, thickness: i32) -> Self {
         Self(color, thickness)
     }
 
@@ -20,7 +20,6 @@ impl Pen {
     pub fn thickness(&self) -> i32 {
         self.1
     }
-
 }
 
 impl Display for Pen {

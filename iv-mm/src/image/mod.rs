@@ -8,8 +8,8 @@ mod buffer_3c;
 mod color;
 mod draw;
 pub mod ocv;
-mod proc;
 mod pen;
+mod proc;
 
 #[cfg(test)]
 mod tests {
