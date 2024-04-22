@@ -26,7 +26,7 @@ impl Buffer3C {
     pub fn as_mat(&self) -> opencv::Result<Mat> {
         unsafe {
             let data_ptr = self.data.as_ptr() as *mut c_void;
-            Mat::new_rows_cols_with_data_def(self.rows, self.cols, self.elem_type, data_ptr)
+            Mat::new_rows_cols_with_data_unsafe_def(self.rows, self.cols, self.elem_type, data_ptr)
         }
     }
 }

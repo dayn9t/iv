@@ -63,7 +63,7 @@ pub fn image_as_mat(image: &mut RgbImage) -> Mat {
     unsafe {
         let p = image.as_mut_ptr() as *mut c_void;
 
-        Mat::new_rows_cols_with_data_def(height as i32, width as i32, CV_8UC3, p).unwrap()
+        Mat::new_rows_cols_with_data_unsafe_def(height as i32, width as i32, CV_8UC3, p).unwrap()
     }
 }
 
