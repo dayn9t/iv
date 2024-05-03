@@ -3,7 +3,8 @@
 resolver = "2"
 
 members = [
-    "iv-core", "iv-gui",
+    "iv-core",
+    "iv-gui",
     "iv-mm",
     #"iv-va",
 ]
