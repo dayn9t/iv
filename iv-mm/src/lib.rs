@@ -1,4 +1,5 @@
 pub mod image;
+pub mod camera;
 
 #[cfg(test)]
 mod tests {

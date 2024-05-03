@@ -15,4 +15,4 @@ anyhow = "*"
 thiserror = "*"
 path_macro = "*"
 
-opencv = { version = "*", default-features = false, features = ["imgproc", "highgui"] }
+opencv = { version = "*", default-features = false, features = ["imgproc", "highgui", "videoio", "imgcodecs"] }
