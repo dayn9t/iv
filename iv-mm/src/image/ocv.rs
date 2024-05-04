@@ -1,7 +1,7 @@
 use std::ffi::c_void;
 
 use image::RgbImage;
-use opencv::core::CV_8UC3;
+use opencv::core::{CV_8UC2, CV_8UC3};
 use opencv::prelude::*;
 
 use iv_core::geo::{Point, Points, Rect, Size, ToAcPoint, ToAcRect};
@@ -65,6 +65,20 @@ pub fn image_as_mat(image: &mut RgbImage) -> Mat {
 
         Mat::new_rows_cols_with_data_unsafe_def(height as i32, width as i32, CV_8UC3, p).unwrap()
     }
+}
+
+/// 缓冲区抓换为Mat
+pub fn buffer_as_mat(buffer: &[u8], size: Size, cv_type: i32) -> Mat
+{
+    unsafe {
+        let data_ptr = buffer.as_ptr() as *mut c_void;
+        Mat::new_rows_cols_with_data_unsafe_def(size.height, size.width, cv_type, data_ptr).unwrap()
+    }
+}
+
+/// YUYV422 转 Mat
+pub fn yuyv_as_mat(buffer: &[u8], size: Size) -> Mat {
+    buffer_as_mat(buffer, size, CV_8UC2)
 }
 
 #[cfg(test)]
