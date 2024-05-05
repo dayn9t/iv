@@ -158,13 +158,10 @@ impl<'d> ActiveCamera<'d> {
 
 #[cfg(test)]
 mod tests {
-    use opencv::highgui;
-
-    use iv_core::geo::SIZE_NHD;
-
-    use crate::image::ocv::yuyv_to_mat3c;
-
     use super::*;
+    use crate::image::ocv::yuyv_to_mat3c;
+    use iv_core::geo::SIZE_NHD;
+    use opencv::highgui;
 
     #[test]
     fn it_works() {
