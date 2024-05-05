@@ -427,6 +427,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_abs() {
+        let size = SizeT {
+            width: 640,
+            height: 360,
+        };
+        let d = 1.0 / 3.0;
+        let rect = RectT {
+            x: d,
+            y: 0.0,
+            width: d,
+            height: 1.0,
+        };
+        let rect: RectT<i32> = rect.absolutized(size).unwrap();
+        print!("{:?}", &rect);
+        assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
     fn test_partial() {
         assert_eq!(1., partial_min(1., 2.));
         assert_eq!(1., partial_min(2., 1.));

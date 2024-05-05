@@ -9,7 +9,6 @@ use libcamera::{
     framebuffer_allocator::{FrameBuffer, FrameBufferAllocator},
     framebuffer_map::MemoryMappedFrameBuffer,
     pixel_format::PixelFormat,
-    properties,
     request::{Request, ReuseFlag},
     stream::StreamRole,
 };

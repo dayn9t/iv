@@ -1,5 +1,5 @@
 use iv_core::geo::{IPolygon, PointF, PolygonF, RectF};
-use iv_mm::image::ocv::image_as_mat;
+use iv_mm::image::ocv::image_as_mut_mat;
 use iv_mm::image::{
     draw_box, draw_ellipse, draw_polygon, draw_rect, draw_text, load_image, BLUE, GREEN, RED,
     YELLOW,
@@ -13,7 +13,7 @@ fn main() {
     let im = load_image(&p).unwrap();
     let mut canvas = im.to_rgb8();
 
-    let mut mat = image_as_mat(&mut canvas);
+    let mut mat = image_as_mut_mat(&mut canvas);
 
     let window = "lena";
     highgui::named_window(window, highgui::WINDOW_AUTOSIZE).unwrap();
@@ -21,7 +21,7 @@ fn main() {
     let _key = highgui::wait_key(0).unwrap();
 
     mat.set_scalar(Scalar::all(127.0)).unwrap();
-    let mat1 = image_as_mat(&mut canvas);
+    let mat1 = image_as_mut_mat(&mut canvas);
 
     let r = RectF::new(0.25, 1.0 / 3.0, 0.5, 1.0 / 3.0);
     draw_rect(&mut canvas, r, YELLOW, 3);

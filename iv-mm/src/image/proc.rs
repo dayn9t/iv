@@ -1,7 +1,9 @@
 use std::path::Path;
 
-use image::DynamicImage;
+use crate::image::ocv::{image_as_mut_mat, yuyv_as_mat2c};
+use image::{imageops, DynamicImage, RgbImage};
 use iv_core::geo::{Rect, RectF, Size};
+use opencv::imgproc::{cvt_color, COLOR_YUV2RGB_YUYV};
 
 /// 加在图像
 pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
@@ -9,6 +11,19 @@ pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
     Ok(im)
 }
 
+/// YUYV422 转化成 RGB
+pub fn yuyv_to_rgb(buffer: &[u8], image: &mut RgbImage) {
+    let size = Size {
+        width: image.width() as i32,
+        height: image.height() as i32,
+    };
+    let src = yuyv_as_mat2c(buffer, size);
+    let mut dst = image_as_mut_mat(image);
+
+    cvt_color(&src, &mut dst, COLOR_YUV2RGB_YUYV, 0).unwrap();
+}
+
+/// 获取图像区域
 pub fn get_roi(image: &DynamicImage, rect: RectF) -> DynamicImage {
     let size = Size::new(image.width() as i32, image.height() as i32);
     let r = rect.absolutized(size).unwrap();
@@ -16,6 +31,24 @@ pub fn get_roi(image: &DynamicImage, rect: RectF) -> DynamicImage {
     let r = r.to().unwrap();
     let sub = image.crop_imm(r.x, r.y, r.width, r.height);
     sub
+}
+
+/// 获取图像区域
+pub fn get_roi_i32(image: &DynamicImage, rect: Rect) -> DynamicImage {
+    let size = Size::new(image.width() as i32, image.height() as i32);
+    let r = rect & Rect::from_size(size);
+    let r = r.to().unwrap();
+    let sub = image.crop_imm(r.x, r.y, r.width, r.height);
+    sub
+}
+
+/// 获取图像区域
+pub fn get_roi_rgb_i32(image: &RgbImage, rect: Rect) -> RgbImage {
+    let size = Size::new(image.width() as i32, image.height() as i32);
+    let r = rect & Rect::from_size(size);
+    let r = r.to().unwrap();
+    let dst = imageops::crop_imm(image, r.x, r.y, r.width, r.height);
+    dst.to_image()
 }
 
 /// 缩放推向到小于等于指定尺寸, 保持宽高比缩

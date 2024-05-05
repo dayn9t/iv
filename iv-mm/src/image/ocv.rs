@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use image::RgbImage;
 use opencv::core::{CV_8UC2, CV_8UC3};
-use opencv::imgproc::{cvt_color, COLOR_YUV2BGR_YUYV};
+use opencv::imgproc::{cvt_color, COLOR_YUV2BGR_YUYV, COLOR_YUV2RGB_YUYV};
 use opencv::prelude::*;
 
 use iv_core::geo::{Point, Points, Rect, Size, ToAcPoint, ToAcRect};
@@ -59,10 +59,20 @@ pub fn cv_color_bgr(rgb: Rgb) -> cv::Scalar {
 }
 
 /// Image(RGB) 作为 Mat(RGB)
-pub fn image_as_mat(image: &mut RgbImage) -> Mat {
+pub fn image_as_mut_mat(image: &mut RgbImage) -> Mat {
     let (width, height) = image.dimensions();
     unsafe {
         let p = image.as_mut_ptr() as *mut c_void;
+
+        Mat::new_rows_cols_with_data_unsafe_def(height as i32, width as i32, CV_8UC3, p).unwrap()
+    }
+}
+
+/// Image(RGB) 作为 Mat(RGB)
+pub fn image_as_mat(image: &RgbImage) -> Mat {
+    let (width, height) = image.dimensions();
+    unsafe {
+        let p = image.as_ptr() as *mut c_void;
 
         Mat::new_rows_cols_with_data_unsafe_def(height as i32, width as i32, CV_8UC3, p).unwrap()
     }
@@ -82,13 +92,20 @@ pub fn yuyv_as_mat2c(buffer: &[u8], size: Size) -> Mat {
 }
 
 /// YUYV422 转 RGB Mat
-pub fn yuyv_to_mat3c(buffer: &[u8], size: Size) -> Mat {
+pub fn yuyv_to_bgr(buffer: &[u8], size: Size) -> Mat {
     let mat2c = yuyv_as_mat2c(buffer, size);
     unsafe {
         let mut mat3c = Mat::new_size(mat2c.size().unwrap(), CV_8UC3).unwrap();
         cvt_color(&mat2c, &mut mat3c, COLOR_YUV2BGR_YUYV, 0).unwrap();
         mat3c
     }
+}
+
+/// YUYV422 转 RGB Mat
+pub fn yuyv_to_rgb1(buffer: &[u8], size: Size, mat3c: &mut Mat) {
+    let mat2c = yuyv_as_mat2c(buffer, size);
+
+    cvt_color(&mat2c, mat3c, COLOR_YUV2RGB_YUYV, 0).unwrap();
 }
 
 #[cfg(test)]
@@ -134,7 +151,7 @@ mod tests {
         let im = load_image(&p).unwrap();
         let mut im = im.to_rgb8();
 
-        let mut mat = image_as_mat(&mut im);
+        let mut mat = image_as_mut_mat(&mut im);
 
         let window = "lena";
         highgui::named_window(window, highgui::WINDOW_AUTOSIZE).unwrap();
@@ -142,7 +159,7 @@ mod tests {
         let _key = highgui::wait_key(0).unwrap();
 
         mat.set_scalar(Scalar::all(255.0)).unwrap();
-        let mat1 = image_as_mat(&mut im);
+        let mat1 = image_as_mut_mat(&mut im);
         highgui::imshow(window, &mat1).unwrap();
         let _key = highgui::wait_key(0).unwrap();
     }

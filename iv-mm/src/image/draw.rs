@@ -9,7 +9,7 @@ use iv_core::geo::{PointF, PolygonF, PolygonI};
 pub use iv_core::geo::{Size, ToAcRect};
 
 pub use crate::image::color::Rgb;
-use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color, cv_points, image_as_mat};
+use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color, cv_points, image_as_mut_mat};
 use crate::image::WHITE;
 
 pub fn image_size(image: &RgbImage) -> Size {
@@ -24,7 +24,7 @@ pub fn draw_rect(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickne
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
     let color = cv_color(color);
-    let mut mat = image_as_mat(canvas);
+    let mut mat = image_as_mut_mat(canvas);
 
     rectangle(&mut mat, rect, color, thickness, LINE_8, 0).unwrap();
 }
@@ -35,7 +35,7 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
     let rect = cv_ac_rect(rect, size);
     let center = cv::rect_center(rect);
     let color = cv_color(color);
-    let mut mat = image_as_mat(canvas);
+    let mut mat = image_as_mut_mat(canvas);
 
     ellipse(
         &mut mat,
@@ -56,7 +56,7 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
 pub fn draw_polygon(canvas: &mut RgbImage, polygon: &PolygonF, color: Rgb, thickness: i32) {
     let size = image_size(canvas);
     let color = cv_color(color);
-    let mut mat = image_as_mat(canvas);
+    let mut mat = image_as_mut_mat(canvas);
     let polygon: PolygonI = polygon.absolutized(size).unwrap();
     let points = cv_points(polygon.into());
 
@@ -75,7 +75,7 @@ pub fn draw_text(
     let size = image_size(canvas);
     let left_bottom = cv_ac_point(left_bottom, size);
     let color = cv_color(color);
-    let mut mat = image_as_mat(canvas);
+    let mut mat = image_as_mut_mat(canvas);
     put_text(
         &mut mat,
         text,
@@ -103,7 +103,7 @@ pub fn draw_box(
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
     let color = cv_color(color);
-    let mut mat = image_as_mat(canvas);
+    let mut mat = image_as_mut_mat(canvas);
 
     rectangle(&mut mat, rect, color, thickness, LINE_8, 0).unwrap();
 
@@ -161,7 +161,7 @@ mod tests {
         let im = load_image(&p).unwrap();
         let mut canvas = im.to_rgb8();
 
-        let mut mat = image_as_mat(&mut canvas);
+        let mut mat = image_as_mut_mat(&mut canvas);
 
         let window = "lena";
         highgui::named_window(window, highgui::WINDOW_AUTOSIZE).unwrap();
@@ -169,7 +169,7 @@ mod tests {
         let _key = highgui::wait_key(0).unwrap();
 
         mat.set_scalar(Scalar::all(255.0)).unwrap();
-        let mat1 = image_as_mat(&mut canvas);
+        let mat1 = image_as_mut_mat(&mut canvas);
 
         let r = RectF::new(0.25, 1.0 / 3.0, 0.5, 1.0 / 3.0);
         draw_rect(&mut canvas, r, YELLOW, 3);
