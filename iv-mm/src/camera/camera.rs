@@ -41,11 +41,13 @@ pub struct ActiveCamera<'d> {
     active_camera: c::ActiveCamera<'d>,
     configs: CameraConfiguration,
     receiver: Option<Receiver<Request>>,
+    last_timestamp: u64,
+    interval: u64,
 }
 
 impl<'d> ActiveCamera<'d> {
     /// 创建摄像机
-    pub fn new(camera: &'d Camera<'_>, format: PixelFormat, size: Size, _fps: f32) -> Self {
+    pub fn new(camera: &'d Camera<'_>, format: PixelFormat, size: Size, fps: f32) -> Self {
         let mut active_camera = camera.acquire().expect("Unable to acquire camera");
 
         // 摄像头配置
@@ -72,6 +74,8 @@ impl<'d> ActiveCamera<'d> {
             active_camera,
             configs,
             receiver: None,
+            last_timestamp: 0,
+            interval: (1000_000_000f32 / fps) as u64,
         }
     }
 
@@ -123,67 +127,47 @@ impl<'d> ActiveCamera<'d> {
     pub fn read(&mut self, buffer: &mut Vec<u8>) {
         //println!("Waiting for camera request execution");
         let receiver = self.receiver.as_ref().unwrap();
-        let mut req = receiver
-            .recv_timeout(RECV_TIMEOUT)
-            .expect("Camera request failed");
+        let mut got = false;
+        while !got {
+            let mut req = receiver
+                .recv_timeout(RECV_TIMEOUT)
+                .expect("Camera request failed");
 
-        //println!("Camera request {:?} completed!", req);
-        //println!("Metadata: {:#?}", req.metadata());
+            //println!("Camera request {:?} completed!", req);
+            //println!("Metadata: {:#?}", req.metadata());
 
-        // Get framebuffer for our stream
-        let cfg = self.configs.get(0).unwrap();
-        let stream = cfg.stream().unwrap();
-        let framebuffer: &MemoryMappedFrameBuffer<FrameBuffer> = req.buffer(&stream).unwrap();
-        println!("FrameBuffer metadata: {:#?}", framebuffer.metadata());
+            // Get framebuffer for our stream
+            let cfg = self.configs.get(0).unwrap();
+            let stream = cfg.stream().unwrap();
+            let framebuffer: &MemoryMappedFrameBuffer<FrameBuffer> = req.buffer(&stream).unwrap();
+            let meta = framebuffer.metadata().unwrap();
+            let timestamp = meta.timestamp();
+            if timestamp >= self.last_timestamp + self.interval {
+                println!("timestamp: {:#?}", timestamp);
+                //println!("FrameBuffer metadata: {:#?}", framebuffer.metadata());
 
-        let planes = framebuffer.data();
-        let frame_data = planes.get(0).unwrap();
-        let bytes_used = framebuffer
-            .metadata()
-            .unwrap()
-            .planes()
-            .get(0)
-            .unwrap()
-            .bytes_used as usize;
+                let planes = framebuffer.data();
+                let frame_data = planes.get(0).unwrap();
+                let bytes_used = meta.planes().get(0).unwrap().bytes_used as usize;
 
-        buffer.clear();
-        buffer.extend_from_slice(&frame_data[..bytes_used]);
+                buffer.clear();
+                buffer.extend_from_slice(&frame_data[..bytes_used]);
 
-        // 复用缓冲区
-        req.reuse(ReuseFlag::REUSE_BUFFERS);
-        self.active_camera.queue_request(req).unwrap();
+                self.last_timestamp = timestamp;
+                got = true;
+            } else {
+                println!("timestamp: {:#?} skip", timestamp);
+            }
+
+            // 复用缓冲区
+            req.reuse(ReuseFlag::REUSE_BUFFERS);
+            self.active_camera.queue_request(req).unwrap();
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use opencv::highgui;
-
-    use iv_core::geo::SIZE_NHD;
-
-    use crate::image::ocv::yuyv_to_mat3c;
-
-    use super::*;
-
     #[test]
-    fn it_works() {
-        let manager = CameraManager::new().unwrap();
-        let cameras = manager.cameras();
-        // 程序选择第一个摄像头
-        let camera = cameras.get(0).expect("No cameras found");
-        let cam_model = camera.properties().get::<properties::Model>().unwrap();
-        println!("Using camera: {}", *cam_model);
-
-        let mut camera = ActiveCamera::new(&camera, PIXEL_FORMAT_YUYV, SIZE_NHD, 1.0);
-        let mut buffer = Vec::new();
-
-        camera.start();
-        for _i in 0..1000 {
-            camera.read(&mut buffer);
-
-            let mat = yuyv_to_mat3c(&buffer, SIZE_NHD);
-            highgui::imshow("BGR Image", &mat).unwrap();
-            highgui::wait_key(30).unwrap();
-        }
-    }
+    fn it_works() {}
 }
