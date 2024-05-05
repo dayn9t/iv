@@ -1,4 +1,4 @@
-//pub mod camera;
+pub mod camera;
 
 //mod a;
 

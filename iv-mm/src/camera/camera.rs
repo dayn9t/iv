@@ -1,5 +1,4 @@
 use std::{fs::OpenOptions, io::Write, process::exit, time::Duration};
-use std::ffi::c_void;
 
 use libcamera::{
     camera::CameraConfigurationStatus,
@@ -12,36 +11,27 @@ use libcamera::{
     request::ReuseFlag,
     stream::StreamRole,
 };
-use libcamera::camera:: { ActiveCamera, Camera as CameraA };
-use libcamera::camera_manager::CameraList;
+use libcamera::camera::{ActiveCamera, Camera, CameraConfiguration};
 use libcamera::geometry::Size;
-use opencv::{core, highgui, imgproc, prelude::*};
+use opencv::prelude::*;
 
 // drm-fourcc does not have MJPEG type yet, construct it from raw fourcc identifier
-const PIXEL_FORMAT_MJPEG: PixelFormat = PixelFormat::new(u32::from_le_bytes([b'M', b'J', b'P', b'G']), 0);
-const PIXEL_FORMAT_YUYV: PixelFormat = PixelFormat::new(u32::from_le_bytes([b'Y', b'U', b'Y', b'V']), 0);
-const SIZE_NHD: Size = Size { width: 640, height: 360 };
+pub const PIXEL_FORMAT_MJPEG: PixelFormat = PixelFormat::new(u32::from_le_bytes([b'M', b'J', b'P', b'G']), 0);
+pub const PIXEL_FORMAT_YUYV: PixelFormat = PixelFormat::new(u32::from_le_bytes([b'Y', b'U', b'Y', b'V']), 0);
+pub const SIZE_NHD: Size = Size { width: 640, height: 360 };
 
 const RECV_TIMEOUT: Duration = Duration::from_secs(2);
 
 
-pub struct Camera {
-    manager: CameraManager,
-    cameras: CameraList<'d>,
-    camera: CameraA<'d>,
-    active_camera: ActiveCamera<'d>
-
+pub struct CameraB<'d> {
+    active_camera: ActiveCamera<'d>,
+    cfgs:CameraConfiguration,
 }
 
-impl <'d> Camera<'d> {
-    pub fn new(index: usize, format: PixelFormat, size:Size,fps:f32) -> Camera<'d> {
+impl <'d> CameraB<'d> {
+    pub fn new(camera: &'d Camera<'_>, format: PixelFormat, size:Size,fps:f32) -> Self {
 
-        let manager = CameraManager::new().unwrap();
-        let cameras = manager.cameras();
-        // 程序选择第一个摄像头
-        let camera = cameras.get(0).expect("No cameras found");
-        let cam_model = camera.properties().get::<properties::Model>().unwrap();
-        println!("Using camera: {}", *cam_model);
+
         let mut active_camera = camera.acquire().expect("Unable to acquire camera");
 
         // 摄像头配置
@@ -85,7 +75,7 @@ impl <'d> Camera<'d> {
             .collect::<Vec<_>>();
 
 
-        Self { manager, cameras, camera, active_camera}
+        Self { active_camera, cfgs}
     }
 
     pub fn start(&mut self) {
@@ -211,4 +201,22 @@ pub fn main1() {
     }
 
     // Everything is cleaned up automatically by Drop implementations
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let manager = CameraManager::new().unwrap();
+        let cameras = manager.cameras();
+        // 程序选择第一个摄像头
+        let camera = cameras.get(0).expect("No cameras found");
+        let cam_model = camera.properties().get::<properties::Model>().unwrap();
+        println!("Using camera: {}", *cam_model);
+
+        let camera = CameraB::new(&camera, PIXEL_FORMAT_YUYV, SIZE_NHD, 1.0);
+    }
 }
