@@ -3,6 +3,7 @@ use std::time::Duration;
 
 pub use libcamera::camera::Camera;
 pub use libcamera::camera_manager::CameraManager;
+pub use libcamera::properties::Model;
 use libcamera::{
     camera::{CameraConfiguration, CameraConfigurationStatus},
     framebuffer::AsFrameBuffer,
@@ -142,7 +143,7 @@ impl<'d> ActiveCamera<'d> {
             let meta = framebuffer.metadata().unwrap();
             let timestamp = meta.timestamp();
             if timestamp >= self.last_timestamp + self.interval {
-                println!("timestamp: {:#?}", timestamp);
+                //println!("timestamp: {:#?}", timestamp);
                 //println!("FrameBuffer metadata: {:#?}", framebuffer.metadata());
 
                 let planes = framebuffer.data();
@@ -155,7 +156,7 @@ impl<'d> ActiveCamera<'d> {
                 self.last_timestamp = timestamp;
                 got = true;
             } else {
-                println!("timestamp: {:#?} skip", timestamp);
+                //println!("timestamp: {:#?} skip", timestamp);
             }
 
             // 复用缓冲区

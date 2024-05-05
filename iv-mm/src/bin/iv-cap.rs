@@ -1,9 +1,7 @@
 use image::RgbImage;
-use libcamera::camera_manager::CameraManager;
-use libcamera::properties;
 
 use iv_core::geo::{Rect, SIZE_NHD};
-use iv_mm::camera::{ActiveCamera, PIXEL_FORMAT_YUYV};
+use iv_mm::camera::{ActiveCamera, CameraManager, Model, PIXEL_FORMAT_YUYV};
 use iv_mm::image::{get_roi_rgb_i32, show_rgb, yuyv_to_rgb};
 
 fn main() {
@@ -11,7 +9,7 @@ fn main() {
     let cameras = manager.cameras();
     // 程序选择第一个摄像头
     let camera = cameras.get(0).expect("No cameras found");
-    let cam_model = camera.properties().get::<properties::Model>().unwrap();
+    let cam_model = camera.properties().get::<Model>().unwrap();
     println!("Using camera: {}", *cam_model);
 
     let mut camera = ActiveCamera::new(&camera, PIXEL_FORMAT_YUYV, SIZE_NHD, 30.0);
