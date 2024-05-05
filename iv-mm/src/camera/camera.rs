@@ -1,17 +1,16 @@
 use std::sync::mpsc::Receiver;
 use std::time::Duration;
 
-pub use libcamera::camera::{Camera, CameraConfiguration};
+pub use libcamera::camera::Camera;
 pub use libcamera::camera_manager::CameraManager;
-use libcamera::request::Request;
 use libcamera::{
-    camera::CameraConfigurationStatus,
+    camera::{CameraConfiguration, CameraConfigurationStatus},
     framebuffer::AsFrameBuffer,
     framebuffer_allocator::{FrameBuffer, FrameBufferAllocator},
     framebuffer_map::MemoryMappedFrameBuffer,
     pixel_format::PixelFormat,
     properties,
-    request::ReuseFlag,
+    request::{Request, ReuseFlag},
     stream::StreamRole,
 };
 
@@ -158,10 +157,13 @@ impl<'d> ActiveCamera<'d> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::image::ocv::yuyv_to_mat3c;
-    use iv_core::geo::SIZE_NHD;
     use opencv::highgui;
+
+    use iv_core::geo::SIZE_NHD;
+
+    use crate::image::ocv::yuyv_to_mat3c;
+
+    use super::*;
 
     #[test]
     fn it_works() {
