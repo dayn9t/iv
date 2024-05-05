@@ -2,6 +2,7 @@ use std::ffi::c_void;
 
 use image::RgbImage;
 use opencv::core::{CV_8UC2, CV_8UC3};
+use opencv::imgproc::{cvt_color, COLOR_YUV2BGR_YUYV};
 use opencv::prelude::*;
 
 use iv_core::geo::{Point, Points, Rect, Size, ToAcPoint, ToAcRect};
@@ -68,8 +69,7 @@ pub fn image_as_mat(image: &mut RgbImage) -> Mat {
 }
 
 /// 缓冲区抓换为Mat
-pub fn buffer_as_mat(buffer: &[u8], size: Size, cv_type: i32) -> Mat
-{
+pub fn buffer_as_mat(buffer: &[u8], size: Size, cv_type: i32) -> Mat {
     unsafe {
         let data_ptr = buffer.as_ptr() as *mut c_void;
         Mat::new_rows_cols_with_data_unsafe_def(size.height, size.width, cv_type, data_ptr).unwrap()
@@ -77,8 +77,18 @@ pub fn buffer_as_mat(buffer: &[u8], size: Size, cv_type: i32) -> Mat
 }
 
 /// YUYV422 转 Mat
-pub fn yuyv_as_mat(buffer: &[u8], size: Size) -> Mat {
+pub fn yuyv_as_mat2c(buffer: &[u8], size: Size) -> Mat {
     buffer_as_mat(buffer, size, CV_8UC2)
+}
+
+/// YUYV422 转 RGB Mat
+pub fn yuyv_to_mat3c(buffer: &[u8], size: Size) -> Mat {
+    let mat2c = yuyv_as_mat2c(buffer, size);
+    unsafe {
+        let mut mat3c = Mat::new_size(mat2c.size().unwrap(), CV_8UC3).unwrap();
+        cvt_color(&mat2c, &mut mat3c, COLOR_YUV2BGR_YUYV, 0).unwrap();
+        mat3c
+    }
 }
 
 #[cfg(test)]
