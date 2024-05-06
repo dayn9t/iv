@@ -1,7 +1,7 @@
 pub use play::*;
 
-mod play;
 mod input;
+mod play;
 
 #[cfg(test)]
 mod tests {
