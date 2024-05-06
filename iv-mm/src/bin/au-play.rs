@@ -7,6 +7,6 @@ fn main() {
     play_sound_wait(p);
 
     for i in 1..4 {
-        play_sound_n_wait(p, 1);
+        play_sound_n_wait(p, i);
     }
 }
