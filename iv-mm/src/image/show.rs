@@ -21,10 +21,10 @@ mod tests {
 
     use opencv::core::Scalar;
     use opencv::highgui;
+    use opencv::prelude::MatTrait;
 
     use crate::image::load_image;
-
-    use super::*;
+    use crate::image::ocv::image_as_mut_mat;
 
     #[test]
     fn test_mat() {
