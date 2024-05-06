@@ -6,5 +6,7 @@ fn main() {
     let p = Path::new("/home/jiang/ws/bot/sounds/app-start.wav");
     play_sound_wait(p);
 
-    play_sound_n_wait(p, 1);
+    for i in 1..4 {
+        play_sound_n_wait(p, 1);
+    }
 }
