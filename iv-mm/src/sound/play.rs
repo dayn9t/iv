@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let p = Path::new("/home/jiang/ws/bot/sound/211-218_1.mp3");
+        let p = Path::new("/home/jiang/ws/bot/sounds/211-218_1.mp3");
         play_wait(p);
     }
 }
