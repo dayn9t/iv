@@ -5,6 +5,10 @@
 - opencv-rust
   - [Changes](https://github.com/twistedfall/opencv-rust/blob/master/CHANGES.md) 
 
+## 工具
+
+- 录音该工具: audacity
+
 ## 依赖
 
 - 声音播放: ```libasound2-dev``` 
