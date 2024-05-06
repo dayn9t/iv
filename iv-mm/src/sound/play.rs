@@ -39,7 +39,6 @@ pub fn play_sound_n_wait(path: &Path, device_index: usize) {
     let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
     let duration = source.total_duration().unwrap();
     stream_handle.play_raw(source.convert_samples()).unwrap();
-    println!("sleep duration: {:?}", duration);
     sleep(duration);
 }
 
