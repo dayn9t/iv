@@ -1,5 +1,5 @@
-pub use play::*;
 pub use input::*;
+pub use play::*;
 
 mod input;
 mod play;

@@ -2,7 +2,7 @@ use std::io::BufReader;
 use std::path::Path;
 use std::thread::sleep;
 
-use cpal::traits::{HostTrait};
+use cpal::traits::HostTrait;
 use rodio::Source;
 
 pub fn play_sound(path: &Path) {
@@ -14,7 +14,6 @@ pub fn play_sound(path: &Path) {
 
 pub fn play_sound_wait(path: &Path) {
     let (_stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
-    println!("Speaker[default] play {:?}", path);
     let file = std::fs::File::open(path).unwrap();
     let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
     let duration = source.total_duration().unwrap();
