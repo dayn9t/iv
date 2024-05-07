@@ -1,10 +1,8 @@
 use std::io::BufReader;
-
-use cpal::traits::{DeviceTrait, HostTrait};
 use std::path::Path;
-use std::sync::mpsc::channel;
 use std::thread::sleep;
 
+use cpal::traits::{DeviceTrait, HostTrait};
 use rodio::Source;
 
 pub fn play_sound(path: &Path) {
