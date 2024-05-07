@@ -2,7 +2,7 @@ use std::io::BufReader;
 use std::path::Path;
 use std::thread::sleep;
 
-use cpal::traits::{DeviceTrait, HostTrait};
+use cpal::traits::{HostTrait};
 use rodio::Source;
 
 pub fn play_sound(path: &Path) {
