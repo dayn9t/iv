@@ -24,11 +24,14 @@ fn main() {
     };
 
     camera.start();
-    for _i in 0..1000 {
+    for i in 0..1000 {
         camera.read(&mut buffer);
         yuyv_to_rgb(&buffer, &mut image);
 
         let roi = get_roi_rgb_i32(&image, rect);
-        show_rgb(&roi, "BGR Image", 20);
+        //show_rgb(&roi, "BGR Image", 20);
+        let p = format!("{}.jpg", i);
+        println!("save: {}", &p);
+        roi.save(&p).unwrap()
     }
 }
