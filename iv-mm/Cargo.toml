@@ -16,6 +16,6 @@ thiserror = "*"
 path_macro = "*"
 
 opencv = { version = "*", default-features = false, features = ["clang-runtime", "imgproc", "highgui"] }
-libcamera = "*"
+
 rodio = "*"
 cpal = "*"

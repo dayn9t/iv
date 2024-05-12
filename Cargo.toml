@@ -3,6 +3,7 @@
 resolver = "2"
 
 members = [
+    "ias-camera",
     "iv-core",
     "iv-gui",
     "iv-mm",
