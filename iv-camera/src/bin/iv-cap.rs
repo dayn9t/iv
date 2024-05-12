@@ -1,6 +1,6 @@
 use image::RgbImage;
 
-use ias_camera::{ActiveCamera, CameraManager, Model, PIXEL_FORMAT_YUYV};
+use iv_camera::{ActiveCamera, CameraManager, Model, PIXEL_FORMAT_YUYV};
 use iv_core::geo::{Rect, SIZE_NHD};
 use iv_mm::image::{get_roi_rgb_i32, show_rgb, yuyv_to_rgb};
 
