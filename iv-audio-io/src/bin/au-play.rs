@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use iv_mm::sound::{play_sound_n_wait, play_sound_wait};
+use iv_audio_io::{play_sound_n_wait, play_sound_wait};
 
 fn main() {
     let p = Path::new("/home/jiang/ws/bot/sounds/app-start.wav");
