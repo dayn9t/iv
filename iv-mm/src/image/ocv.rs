@@ -13,7 +13,7 @@ pub mod cv {
     pub use opencv::core::Point;
     pub use opencv::core::Rect;
     pub use opencv::core::Scalar;
-    pub use opencv::types::VectorOfPoint;
+    pub type PointVector = opencv::core::Vector<Point>;
 
     /// 获取矩形中心
     pub fn rect_center(r: Rect) -> Point {
@@ -27,8 +27,8 @@ pub fn cv_point(p: Point) -> cv::Point {
 }
 
 /// 点集转化为CV点集
-pub fn cv_points(points: Points) -> cv::VectorOfPoint {
-    cv::VectorOfPoint::from_iter(points.into_iter().map(|p| cv_point(p)))
+pub fn cv_points(points: Points) -> cv::PointVector {
+    cv::PointVector::from_iter(points.into_iter().map(|p| cv_point(p)))
 }
 
 /// 矩形转化为CV矩形
