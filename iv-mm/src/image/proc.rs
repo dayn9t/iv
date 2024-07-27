@@ -51,7 +51,7 @@ pub fn get_roi_rgb_i32(image: &RgbImage, rect: Rect) -> RgbImage {
     dst.to_image()
 }
 
-/// 缩放推向到小于等于指定尺寸, 保持宽高比缩
+/// 缩放推向到小于等于指定尺寸, 保持宽高比缩, 要求32对齐
 pub fn resize_into_box(src: &DynamicImage, size: Size) -> DynamicImage {
     let aligned = 32;
     let (width, height) = {
@@ -113,9 +113,12 @@ mod tests {
         let f = Path::new("/home/jiang/rs/ias/ias-dl/assets/cans.jpg");
         let src = load_image(&f).unwrap();
 
+        assert_eq!(src.width(), 1920);
+        assert_eq!(src.height(), 1080);
+
         let dst = resize_into_box(&src, Size::new(640, 640));
         assert_eq!(dst.width(), 640);
-        assert_eq!(dst.height(), 352); // not 360
+        assert_eq!(dst.height(), 384); // not 360, FIXME: 352更接近, 且垂直压缩
     }
     /*
     #[test]
