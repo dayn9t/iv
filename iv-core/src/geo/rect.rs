@@ -99,12 +99,28 @@ impl<T: CoordNum> RectT<T> {
         PointT::new(self.x, self.y)
     }
 
+    /// 获取最右值
+    pub fn right(&self) -> T
+    where
+        T: CoordNum,
+    {
+        self.x + self.width
+    }
+
     /// 获取右上坐标
     pub fn right_top(&self) -> PointT<T>
     where
         T: CoordNum,
     {
-        PointT::new(self.x + self.width, self.y)
+        PointT::new(self.right(), self.y)
+    }
+
+    /// 获取最下值
+    pub fn bottom(&self) -> T
+    where
+        T: CoordNum,
+    {
+        self.y + self.height
     }
 
     /// 获取右下坐标
@@ -112,7 +128,7 @@ impl<T: CoordNum> RectT<T> {
     where
         T: CoordNum,
     {
-        PointT::new(self.x + self.width, self.y + self.height)
+        PointT::new(self.right(), self.bottom())
     }
 
     /// 获取左下坐标
@@ -120,7 +136,7 @@ impl<T: CoordNum> RectT<T> {
     where
         T: CoordNum,
     {
-        PointT::new(self.x, self.y + self.height)
+        PointT::new(self.x, self.bottom())
     }
 
     /// 获取尺寸
