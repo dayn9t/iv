@@ -7,7 +7,7 @@ use opencv::imgproc::{cvt_color, COLOR_YUV2RGB_YUYV};
 
 /// 加在图像
 pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
-    let im = image::io::Reader::open(&path)?.decode()?;
+    let im = image::ImageReader::open(&path)?.decode()?;
     Ok(im)
 }
 
