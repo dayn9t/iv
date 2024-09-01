@@ -1,6 +1,23 @@
 use std::process::Command;
 use std::str::FromStr;
 use std::path::Path;
+use clap::Parser;
+
+/// Command line arguments structure
+#[derive(Parser)]
+#[clap(author, version, about)]
+struct Args {
+    /// Path to the media file
+    file_path: String,
+
+    /// Segment length in seconds
+    #[clap(short, long)]
+    segment_length: f64,
+
+    /// Overlap time in seconds
+    #[clap(short, long, default_value = "0.0")]
+    overlap: f64,
+}
 
 fn get_media_duration(file_path: &str) -> Result<f64, String> {
     let output = Command::new("ffprobe")
@@ -20,7 +37,7 @@ fn get_media_duration(file_path: &str) -> Result<f64, String> {
     Ok(duration)
 }
 
-fn split_media_file(file_path: &str, segment_length: f64) -> Result<(), String> {
+fn split_media_file(file_path: &str, segment_length: f64, overlap: f64) -> Result<(), String> {
     let duration = get_media_duration(file_path)?;
     let file_stem = Path::new(file_path)
         .file_stem()
@@ -35,21 +52,27 @@ fn split_media_file(file_path: &str, segment_length: f64) -> Result<(), String> 
 
     let mut start_time = 0.0;
     let mut segment_index = 0;
+    let mut segment_length = segment_length;
 
     while start_time < duration {
-        let output_file = format!("{}_part{}.{}", file_stem, segment_index, file_extension);
+        let output_file = format!("{}_{}.{}", file_stem, segment_index, file_extension);
+        println!("#{} {}", segment_index, output_file);
         Command::new("ffmpeg")
             .args(&[
                 "-i", file_path,
                 "-ss", &start_time.to_string(),
                 "-t", &segment_length.to_string(),
                 "-c", "copy",
+                "-y",
                 &output_file,
             ])
             .output()
             .map_err(|e| format!("Failed to execute ffmpeg: {}", e))?;
 
-        start_time += segment_length;
+        start_time += segment_length - overlap;
+        if segment_index == 0 {
+            segment_length += overlap;
+        }
         segment_index += 1;
     }
 
@@ -57,10 +80,9 @@ fn split_media_file(file_path: &str, segment_length: f64) -> Result<(), String> 
 }
 
 fn main() {
-    let file_path = "/home/jiang/py/asr/asr1/audio/德云社_01-03-06.mp3";
-    let segment_length = 600.0; // 10 minutes
+    let args = Args::parse();
 
-    match split_media_file(file_path, segment_length) {
+    match split_media_file(&args.file_path, args.segment_length, args.overlap) {
         Ok(_) => println!("File split successfully."),
         Err(e) => eprintln!("Error: {}", e),
     }
