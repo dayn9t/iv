@@ -1,7 +1,7 @@
+use clap::Parser;
+use std::path::Path;
 use std::process::Command;
 use std::str::FromStr;
-use std::path::Path;
-use clap::Parser;
 
 /// Command line arguments structure
 #[derive(Parser)]
@@ -22,9 +22,12 @@ struct Args {
 fn get_media_duration(file_path: &str) -> Result<f64, String> {
     let output = Command::new("ffprobe")
         .args(&[
-            "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
             file_path,
         ])
         .output()
@@ -59,10 +62,14 @@ fn split_media_file(file_path: &str, segment_length: f64, overlap: f64) -> Resul
         println!("#{} {}", segment_index, output_file);
         Command::new("ffmpeg")
             .args(&[
-                "-i", file_path,
-                "-ss", &start_time.to_string(),
-                "-t", &segment_length.to_string(),
-                "-c", "copy",
+                "-i",
+                file_path,
+                "-ss",
+                &start_time.to_string(),
+                "-t",
+                &segment_length.to_string(),
+                "-c",
+                "copy",
                 "-y",
                 &output_file,
             ])
