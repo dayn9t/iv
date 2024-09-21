@@ -1,4 +1,5 @@
 pub mod image;
+pub mod meta;
 
 #[cfg(test)]
 mod tests {

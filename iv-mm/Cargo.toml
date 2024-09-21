@@ -9,12 +9,20 @@ iv-core = { path = "../iv-core" }
 rx-core = { path = "../../rx/rx-core" }
 
 image = "*"
+rexif = "*" # 支持:  JPEG and TIFF
+nom-exif = "*" # 新, 支持多种图片/视频文件格式
+rexiv2 = "*" # 支持读写, 依赖: libgexiv2-dev
+
 
 tracing = "*"
 anyhow = "*"
 thiserror = "*"
 path_macro = "*"
 
+ffmpeg-next = "*"
+
 opencv = { version = "*", default-features = false, features = ["clang-runtime", "imgproc", "highgui"] }
 
 clap = { version = "*", features = ["derive"] }
+chrono = "0.4.38"
+tempfile = "3.12.0"
