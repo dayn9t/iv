@@ -1,5 +1,6 @@
 pub mod image;
 pub mod meta;
+pub mod ffmpeg;
 
 #[cfg(test)]
 mod tests {

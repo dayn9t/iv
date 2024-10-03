@@ -5,6 +5,8 @@ pub use chrono::NaiveDateTime;
 pub use rexiv2::GpsInfo;
 
 use rx_core::text::BoxResult;
+use iv_core::geo::Size;
+
 /// 图像描述
 pub const EXIF_TAG_IMAGE_DESCRIPTION: &str = "Exif.Image.ImageDescription";
 /// 相机制造商
@@ -39,7 +41,7 @@ pub const EXIF_TAG_EXPOSURE_TIME: &str = "Exif.Photo.ExposureTime";
 pub const EXIF_TAG_GPS_DATESTAMP: &str = "Exif.GPSInfo.GPSDateStamp";
 
 pub struct ExifManager {
-    metadata: Metadata,
+    meta: Metadata,
 }
 
 impl ExifManager {
@@ -47,50 +49,58 @@ impl ExifManager {
     pub fn new(file_path: impl AsRef<Path>) -> BoxResult<Self> {
         rexiv2::initialize()?;
         let metadata = Metadata::new_from_path(file_path.as_ref())?;
-        Ok(Self { metadata })
+        Ok(Self { meta: metadata })
     }
 
+    /// 获取图片的尺寸
+    pub fn get_size(&self) -> Size {
+        let width = self.meta.get_pixel_width();
+        let height = self.meta.get_pixel_height();
+        Size { width, height }
+    }
+
+
     /// 获取图片的修改时间
-    pub fn get_modification_time(&self) -> Option<NaiveDateTime> {
-        self.metadata
+    pub fn get_time(&self) -> Option<NaiveDateTime> {
+        self.meta
             .get_tag_string(EXIF_TAG_DATE_TIME)
             .ok()
             .and_then(|time_str| NaiveDateTime::parse_from_str(&time_str, "%Y:%m:%d %H:%M:%S").ok())
     }
 
     /// 设置图片的修改时间
-    pub fn set_modification_time(&mut self, time: NaiveDateTime) -> BoxResult<()> {
+    pub fn set_time(&mut self, time: NaiveDateTime) -> BoxResult<()> {
         let time_str = time.format("%Y:%m:%d %H:%M:%S").to_string();
-        self.metadata
+        self.meta
             .set_tag_string(EXIF_TAG_DATE_TIME, &time_str)?;
         Ok(())
     }
 
     /// 获取图片的 GPS 经纬度坐标
     pub fn get_gps_coordinates(&self) -> Option<GpsInfo> {
-        self.metadata.get_gps_info()
+        self.meta.get_gps_info()
     }
 
     /// 设置图片的 GPS 经纬度坐标
     pub fn set_gps_coordinates(&mut self, coordinates: GpsInfo) -> BoxResult<()> {
-        Ok(self.metadata.set_gps_info(&coordinates)?)
+        Ok(self.meta.set_gps_info(&coordinates)?)
     }
 
     /// 获取图片的注释信息
     pub fn get_comment(&self) -> Option<String> {
-        self.metadata.get_tag_string(EXIF_TAG_USER_COMMENT).ok()
+        self.meta.get_tag_string(EXIF_TAG_USER_COMMENT).ok()
     }
 
     /// 设置图片的注释信息
     pub fn set_comment(&mut self, comment: &str) -> BoxResult<()> {
-        self.metadata
+        self.meta
             .set_tag_string(EXIF_TAG_USER_COMMENT, comment)?;
         Ok(())
     }
 
     /// 保存元数据到文件
     pub fn save(&self, file_path: impl AsRef<Path>) -> BoxResult<()> {
-        self.metadata.save_to_file(file_path.as_ref())?;
+        self.meta.save_to_file(file_path.as_ref())?;
         Ok(())
     }
 }
@@ -114,7 +124,7 @@ mod tests {
     fn test_get_modification_time() {
         let test_image = create_test_image();
         let exif_manager = ExifManager::new(test_image.path().to_str().unwrap()).unwrap();
-        let modification_time = exif_manager.get_modification_time();
+        let modification_time = exif_manager.get_time();
         assert!(modification_time.is_none());
     }
 
@@ -124,9 +134,9 @@ mod tests {
         let mut exif_manager = ExifManager::new(test_image.path()).unwrap();
         let new_time =
             NaiveDateTime::parse_from_str("2023:10:01 12:00:00", "%Y:%m:%d %H:%M:%S").unwrap();
-        exif_manager.set_modification_time(new_time).unwrap();
+        exif_manager.set_time(new_time).unwrap();
         exif_manager.save(test_image.path()).unwrap();
-        let updated_time = exif_manager.get_modification_time().unwrap();
+        let updated_time = exif_manager.get_time().unwrap();
         assert_eq!(updated_time, new_time);
     }
 

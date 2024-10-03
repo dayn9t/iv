@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use geo_types::CoordNum;
@@ -136,5 +136,14 @@ where
     fn div_assign(&mut self, rhs: T) {
         self.width /= rhs;
         self.height /= rhs;
+    }
+}
+
+impl<T> Display for SizeT<T>
+where
+    T: CoordNum + DivAssign + Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}x{}", self.width, self.height)
     }
 }
