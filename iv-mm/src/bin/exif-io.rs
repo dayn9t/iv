@@ -1,6 +1,6 @@
+use iv_mm::meta::ExifManager;
 use rexiv2::GpsInfo;
 use rx_core::time::now;
-use iv_mm::meta::ExifManager;
 
 fn main() {
     //let file = "/home/jiang/rs/iv/data/image/jack2.jpg";

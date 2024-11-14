@@ -1,14 +1,23 @@
 use std::path::Path;
 
 use crate::image::ocv::{image_as_mut_mat, yuyv_as_mat2c};
-use image::{imageops, DynamicImage, RgbImage};
+use image::{imageops, DynamicImage, ImageResult, RgbImage};
 use iv_core::geo::{Rect, RectF, Size};
 use opencv::imgproc::{cvt_color, COLOR_YUV2RGB_YUYV};
+use rx_core::sys::fs::make_parent;
+use rx_core::text::BoxResult;
 
 /// 加在图像
 pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
     let im = image::ImageReader::open(&path)?.decode()?;
     Ok(im)
+}
+
+/// 保存图像
+pub fn save_image(image: &DynamicImage, path: &Path) -> BoxResult<()> {
+    make_parent(path)?;
+    image.save(path)?;
+    Ok(())
 }
 
 /// YUYV422 转化成 RGB

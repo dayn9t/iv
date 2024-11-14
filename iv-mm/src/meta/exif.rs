@@ -4,8 +4,8 @@ use std::path::Path;
 pub use chrono::NaiveDateTime;
 pub use rexiv2::GpsInfo;
 
-use rx_core::text::BoxResult;
 use iv_core::geo::Size;
+use rx_core::text::BoxResult;
 
 /// 图像描述
 pub const EXIF_TAG_IMAGE_DESCRIPTION: &str = "Exif.Image.ImageDescription";
@@ -59,7 +59,6 @@ impl ExifManager {
         Size { width, height }
     }
 
-
     /// 获取图片的修改时间
     pub fn get_time(&self) -> Option<NaiveDateTime> {
         self.meta
@@ -71,8 +70,7 @@ impl ExifManager {
     /// 设置图片的修改时间
     pub fn set_time(&mut self, time: NaiveDateTime) -> BoxResult<()> {
         let time_str = time.format("%Y:%m:%d %H:%M:%S").to_string();
-        self.meta
-            .set_tag_string(EXIF_TAG_DATE_TIME, &time_str)?;
+        self.meta.set_tag_string(EXIF_TAG_DATE_TIME, &time_str)?;
         Ok(())
     }
 
@@ -93,8 +91,7 @@ impl ExifManager {
 
     /// 设置图片的注释信息
     pub fn set_comment(&mut self, comment: &str) -> BoxResult<()> {
-        self.meta
-            .set_tag_string(EXIF_TAG_USER_COMMENT, comment)?;
+        self.meta.set_tag_string(EXIF_TAG_USER_COMMENT, comment)?;
         Ok(())
     }
 
