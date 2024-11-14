@@ -52,6 +52,32 @@ impl ExifManager {
         Ok(Self { meta: metadata })
     }
 
+    /// 保存图片的注释信息
+    pub fn save_comment(file_path: impl AsRef<Path>, comment:&str) -> BoxResult<()> {
+        let mut exif = Self::new(file_path.as_ref())?;
+        exif.set_comment(comment)?;
+        exif.save(file_path.as_ref())?;
+        Ok(())
+    }
+
+
+    /// 注入EXIF信息
+    pub fn inject_exif(file: &Path, time: NaiveDateTime, gps: GpsInfo) {
+        let mut exif = ExifManager::new(file).unwrap();
+        exif.set_gps_coordinates(gps).unwrap();
+        exif.set_time(time).unwrap();
+        exif.save(file).unwrap();
+
+        let p = exif.get_gps_coordinates().unwrap();
+        println!("gps: {:?}", p);
+    }
+
+    /// 复制EXIF信息
+    pub fn copy_exif(src: &Path, dst: &Path) {
+        let exif = ExifManager::new(src).unwrap();
+        exif.save(dst).unwrap();
+    }
+
     /// 获取图片的尺寸
     pub fn get_size(&self) -> Size {
         let width = self.meta.get_pixel_width();

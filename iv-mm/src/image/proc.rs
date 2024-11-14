@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use crate::image::ocv::{image_as_mut_mat, yuyv_as_mat2c};
-use image::{imageops, DynamicImage, ImageResult, RgbImage};
+use image::{imageops, DynamicImage, RgbImage};
 use iv_core::geo::{Rect, RectF, Size};
 use opencv::imgproc::{cvt_color, COLOR_YUV2RGB_YUYV};
 use rx_core::sys::fs::make_parent;
