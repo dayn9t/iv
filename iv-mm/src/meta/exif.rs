@@ -53,13 +53,12 @@ impl ExifManager {
     }
 
     /// 保存图片的注释信息
-    pub fn save_comment(file_path: impl AsRef<Path>, comment:&str) -> BoxResult<()> {
+    pub fn save_comment(file_path: impl AsRef<Path>, comment: &str) -> BoxResult<()> {
         let mut exif = Self::new(file_path.as_ref())?;
         exif.set_comment(comment)?;
         exif.save(file_path.as_ref())?;
         Ok(())
     }
-
 
     /// 注入EXIF信息
     pub fn inject_exif(file: &Path, time: NaiveDateTime, gps: GpsInfo) {
