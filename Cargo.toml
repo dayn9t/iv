@@ -7,7 +7,6 @@ members = [
     "iv-core",
     "iv-gui",
     "iv-mm",
-    "iv-audio-io",
     #"iv-va",
 ]
 
