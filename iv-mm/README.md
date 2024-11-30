@@ -14,7 +14,7 @@
 
 - 媒体文件元信息: ```libgexiv2-dev```
 - 声音播放: ```libasound2-dev``` 
-- opencv: ```clang libclang-dev ninja-build libopencv-dev```
+- opencv: ```clang libclang-dev ninja-build libopencv-imgproc-dev libopencv-highgui-dev``` # libopencv-dev
 - libcamera: ```libcamera-dev```
 
 ## 工具
