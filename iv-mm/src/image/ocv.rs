@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use image::RgbImage;
 use opencv::core::{CV_8UC2, CV_8UC3};
-use opencv::imgproc::{cvt_color, COLOR_YUV2BGR_YUYV, COLOR_YUV2RGB_YUYV};
+use opencv::imgproc::{COLOR_YUV2BGR_YUYV, COLOR_YUV2RGB_YUYV, cvt_color};
 use opencv::prelude::*;
 
 use iv_core::geo::{Point, Points, Rect, Size, ToAcPoint, ToAcRect};

@@ -1,4 +1,4 @@
-use crate::image::{Rgb, BLACK, BLUE, CYAN, GRAY, GREEN, ORANGE, PURPLE, RED, WHITE, YELLOW};
+use crate::image::{BLACK, BLUE, CYAN, GRAY, GREEN, ORANGE, PURPLE, RED, Rgb, WHITE, YELLOW};
 use std::fmt;
 use std::fmt::Display;
 

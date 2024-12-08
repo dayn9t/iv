@@ -226,11 +226,7 @@ impl<T: CoordNum> RectT<T> {
     pub fn iou(self, other: Self) -> f64 {
         let s0 = (self & other).area().to_f64().unwrap();
         let s1 = (self | other).area().to_f64().unwrap();
-        if s0 == 0.0 {
-            0.0
-        } else {
-            s0 / s1
-        }
+        if s0 == 0.0 { 0.0 } else { s0 / s1 }
     }
 
     /// 宽高比

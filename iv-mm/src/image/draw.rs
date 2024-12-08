@@ -2,15 +2,15 @@ use std::cmp::max;
 
 use image::RgbImage;
 use opencv::imgproc::{
-    ellipse, get_font_scale_from_height, polylines, put_text, rectangle, LINE_8,
+    LINE_8, ellipse, get_font_scale_from_height, polylines, put_text, rectangle,
 };
 
 use iv_core::geo::{PointF, PolygonF, PolygonI};
 pub use iv_core::geo::{Size, ToAcRect};
 
+use crate::image::WHITE;
 pub use crate::image::color::Rgb;
 use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color, cv_points, image_as_mut_mat};
-use crate::image::WHITE;
 
 pub fn image_size(image: &RgbImage) -> Size {
     Size {
@@ -151,7 +151,7 @@ mod tests {
 
     use iv_core::geo::{IPolygon, RectF};
 
-    use crate::image::{load_image, GREEN, RED, YELLOW};
+    use crate::image::{GREEN, RED, YELLOW, load_image};
 
     use super::*;
 

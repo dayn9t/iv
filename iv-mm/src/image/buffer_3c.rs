@@ -69,7 +69,7 @@ mod tests {
     use opencv::core::{MatTrait, Scalar};
     use opencv::highgui;
 
-    use crate::image::{load_image, Buffer3C};
+    use crate::image::{Buffer3C, load_image};
 
     #[test]
     fn it_works() {

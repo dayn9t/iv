@@ -1,8 +1,8 @@
 use iv_core::geo::{IPolygon, PointF, PolygonF, RectF};
 use iv_mm::image::ocv::image_as_mut_mat;
 use iv_mm::image::{
-    draw_box, draw_ellipse, draw_polygon, draw_rect, draw_text, load_image, BLUE, GREEN, RED,
-    YELLOW,
+    BLUE, GREEN, RED, YELLOW, draw_box, draw_ellipse, draw_polygon, draw_rect, draw_text,
+    load_image,
 };
 use opencv::core::{MatTrait, Scalar};
 use opencv::highgui;

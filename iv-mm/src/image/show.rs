@@ -1,6 +1,6 @@
 use image::RgbImage;
 use opencv::highgui::{imshow, wait_key};
-use opencv::imgproc::{cvt_color, COLOR_RGB2BGR};
+use opencv::imgproc::{COLOR_RGB2BGR, cvt_color};
 use opencv::prelude::Mat;
 
 use crate::image::ocv::image_as_mat;
