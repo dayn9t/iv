@@ -2,7 +2,7 @@ use geo::Contains;
 pub use geo::GeoNum;
 use geo_types::{Coord, CoordNum, LineString, Polygon};
 use rx_core::m::{partial_max, partial_min};
-use rx_core::serde_export::{Deserialize, Serialize};
+use rx_core::prelude::*;
 
 use crate::geo::{IShape, PointT, RectT, SizeT};
 
