@@ -5,7 +5,7 @@ pub use chrono::NaiveDateTime;
 pub use rexiv2::GpsInfo;
 
 use iv_core::geo::Size;
-use rx_core::text::BoxResult;
+use rx_core::text::AnyResult;
 
 /// 图像描述
 pub const EXIF_TAG_IMAGE_DESCRIPTION: &str = "Exif.Image.ImageDescription";
@@ -46,14 +46,14 @@ pub struct ExifManager {
 
 impl ExifManager {
     /// 创建一个新的 ExifManager 实例
-    pub fn new(file_path: impl AsRef<Path>) -> BoxResult<Self> {
+    pub fn new(file_path: impl AsRef<Path>) -> AnyResult<Self> {
         rexiv2::initialize()?;
         let metadata = Metadata::new_from_path(file_path.as_ref())?;
         Ok(Self { meta: metadata })
     }
 
     /// 保存图片的注释信息
-    pub fn save_comment(file_path: impl AsRef<Path>, comment: &str) -> BoxResult<()> {
+    pub fn save_comment(file_path: impl AsRef<Path>, comment: &str) -> AnyResult<()> {
         let mut exif = Self::new(file_path.as_ref())?;
         exif.set_comment(comment)?;
         exif.save(file_path.as_ref())?;
@@ -93,7 +93,7 @@ impl ExifManager {
     }
 
     /// 设置图片的修改时间
-    pub fn set_time(&mut self, time: NaiveDateTime) -> BoxResult<()> {
+    pub fn set_time(&mut self, time: NaiveDateTime) -> AnyResult<()> {
         let time_str = time.format("%Y:%m:%d %H:%M:%S").to_string();
         self.meta.set_tag_string(EXIF_TAG_DATE_TIME, &time_str)?;
         Ok(())
@@ -105,7 +105,7 @@ impl ExifManager {
     }
 
     /// 设置图片的 GPS 经纬度坐标
-    pub fn set_gps_coordinates(&mut self, coordinates: GpsInfo) -> BoxResult<()> {
+    pub fn set_gps_coordinates(&mut self, coordinates: GpsInfo) -> AnyResult<()> {
         Ok(self.meta.set_gps_info(&coordinates)?)
     }
 
@@ -115,13 +115,13 @@ impl ExifManager {
     }
 
     /// 设置图片的注释信息
-    pub fn set_comment(&mut self, comment: &str) -> BoxResult<()> {
+    pub fn set_comment(&mut self, comment: &str) -> AnyResult<()> {
         self.meta.set_tag_string(EXIF_TAG_USER_COMMENT, comment)?;
         Ok(())
     }
 
     /// 保存元数据到文件
-    pub fn save(&self, file_path: impl AsRef<Path>) -> BoxResult<()> {
+    pub fn save(&self, file_path: impl AsRef<Path>) -> AnyResult<()> {
         self.meta.save_to_file(file_path.as_ref())?;
         Ok(())
     }

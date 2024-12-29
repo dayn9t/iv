@@ -3,7 +3,7 @@ use clap::Parser;
 use rx_core::log::init_log;
 use rx_core::prelude::*;
 use rx_core::sys::fs::{SortOrder, files_in};
-use rx_core::text::BoxResult;
+use rx_core::text::AnyResult;
 use rx_core::time::ClockTime;
 use std::path::PathBuf;
 
@@ -38,7 +38,7 @@ pub struct Opt {
    let dst_file = path!("/tmp/01.srt");
 */
 
-fn main() -> BoxResult<()> {
+fn main() -> AnyResult<()> {
     let opt = Opt::parse();
     init_log(opt.verbose as usize);
 

@@ -5,7 +5,7 @@ use image::{DynamicImage, RgbImage, imageops};
 use iv_core::geo::{Rect, RectF, Size};
 use opencv::imgproc::{COLOR_YUV2RGB_YUYV, cvt_color};
 use rx_core::sys::fs::make_parent;
-use rx_core::text::BoxResult;
+use rx_core::text::AnyResult;
 
 /// 加在图像
 pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
@@ -14,7 +14,7 @@ pub fn load_image(path: &Path) -> anyhow::Result<DynamicImage> {
 }
 
 /// 保存图像
-pub fn save_image(image: &DynamicImage, path: &Path) -> BoxResult<()> {
+pub fn save_image(image: &DynamicImage, path: &Path) -> AnyResult<()> {
     make_parent(path)?;
     image.save(path)?;
     Ok(())
