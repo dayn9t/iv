@@ -1,9 +1,17 @@
-use image::{GrayImage, RgbImage};
+use image::{DynamicImage, GrayImage, RgbImage};
 use opencv::highgui::{imshow, wait_key};
 use opencv::imgproc::{COLOR_RGB2BGR, cvt_color};
 use opencv::prelude::Mat;
 
 use crate::image::ocv::{gray_as_mat, image_as_mat};
+
+pub fn show(image: &DynamicImage, title: &str, delay: i32) {
+    match image {
+        DynamicImage::ImageLuma8(gray) => show_gray(&gray, title, delay),
+        DynamicImage::ImageRgb8(rgb) => show_rgb(&rgb, title, delay),
+        _ => unreachable!(),
+    }
+}
 
 pub fn show_rgb(im: &RgbImage, title: &str, delay: i32) {
     let src = image_as_mat(im);
