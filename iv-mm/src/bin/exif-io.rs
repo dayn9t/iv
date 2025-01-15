@@ -1,12 +1,32 @@
+use iv_mm::PACKAGE_DIR;
 use iv_mm::meta::ExifManager;
+use path_macro::path;
 use rexiv2::GpsInfo;
+use rx_core::prelude::{Deserialize, Serialize};
+use rx_core::text::json;
 use rx_core::time::now;
 
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct SnapshotMeta {
+    /// 组编号
+    pub group: u32,
+    /// 抓图源编号
+    pub source: u32,
+    /// 摄像机编号
+    pub camera: u32,
+    /// 任务
+    pub task: u32,
+}
+
 fn main() {
-    //let file = "/home/jiang/rs/iv/data/image/jack2.jpg";
-    let file = "/home/jiang/1/s4/0001.jpg";
-    let dst = "/home/jiang/1/s4/0001a.jpg";
-    let mut exif = ExifManager::new(file).unwrap();
+    //let file = "/home/jiang/rs/iv/assets/images/jack2.jpg";
+    let dir = path!(PACKAGE_DIR / "../assets/images");
+
+    let src_file = path!(dir / "jack2.jpg");
+    let dst_file = path!(dir / "jack2.jpg");
+    //let dst_file = path!("/tmp/iv/jack2.jpg");
+
+    let mut exif = ExifManager::new(src_file).unwrap();
 
     let size = exif.get_size();
     println!("Size: {size}");
@@ -29,5 +49,15 @@ fn main() {
     let time = now();
     exif.set_time(time).unwrap();
 
-    exif.save(file).unwrap();
+    let meta = SnapshotMeta {
+        group: 1,
+        source: 3,
+        camera: 4,
+        task: 5,
+    };
+    let meta = json::to_string(&meta).unwrap();
+
+    exif.set_comment(&meta).unwrap();
+
+    exif.save(dst_file).unwrap();
 }

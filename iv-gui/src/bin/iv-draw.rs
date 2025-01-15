@@ -9,7 +9,7 @@ use opencv::highgui;
 use std::path::PathBuf;
 
 fn main() {
-    let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/data/lena.jpg");
+    let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/assets/lena.jpg");
     let im = load_image(&p).unwrap();
     let mut canvas = im.to_rgb8();
 

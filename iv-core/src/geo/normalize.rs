@@ -1,4 +1,4 @@
-use crate::geo::{Point, PointF, Rect, RectF, Size};
+use crate::geo::{Point, PointF, PointFs, Points, Rect, RectF, Size};
 
 /// 转换为归一化坐标
 pub trait ToNcPoint {
@@ -77,6 +77,26 @@ impl ToAcRect for RectF {
     /// 转换为绝对坐标, 整数坐标被认为是归一化坐标, 需要转换
     fn to_ac_rect(&self, size: Size) -> Rect {
         self.absolutized(size).unwrap()
+    }
+}
+
+/// 转换为绝对坐标点
+pub trait ToAcPoints {
+    /// 转换为绝对坐标点
+    fn to_ac_points(&self, size: Size) -> Points;
+}
+
+impl ToAcPoints for Points {
+    /// 转换为绝对坐标, 整数坐标被认为是绝对坐标, 不需要转换
+    fn to_ac_points(&self, _size: Size) -> Points {
+        self.clone()
+    }
+}
+
+impl ToAcPoints for PointFs {
+    /// 转换为绝对坐标, 整数坐标被认为是归一化坐标, 需要转换
+    fn to_ac_points(&self, size: Size) -> Points {
+        self.iter().map(|p| p.to_ac_point(size)).collect()
     }
 }
 

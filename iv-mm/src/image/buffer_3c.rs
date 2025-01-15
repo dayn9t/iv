@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/data/lena.jpg");
+        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/assets/lena.jpg");
         let im = load_image(&p).unwrap();
         let im = im.to_rgb8();
 

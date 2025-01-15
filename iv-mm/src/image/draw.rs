@@ -10,7 +10,9 @@ pub use iv_core::geo::{Size, ToAcRect};
 
 use crate::image::WHITE;
 pub use crate::image::color::Rgb;
-use crate::image::ocv::{cv, cv_ac_point, cv_ac_rect, cv_color, cv_points, image_as_mut_mat};
+use crate::image::ocv::{
+    CvPoint, cv_ac_point, cv_ac_rect, cv_color, cv_points, cv_rect_center, image_as_mut_mat,
+};
 
 pub fn image_size(image: &RgbImage) -> Size {
     Size {
@@ -33,7 +35,7 @@ pub fn draw_rect(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickne
 pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickness: i32) {
     let size = image_size(canvas);
     let rect = cv_ac_rect(rect, size);
-    let center = cv::rect_center(rect);
+    let center = cv_rect_center(rect);
     let color = cv_color(color);
     let mut mat = image_as_mut_mat(canvas);
 
@@ -117,11 +119,11 @@ pub fn draw_box(
         let dy = line_space + font_height;
         let (mut start_pos, dy) = if down_to_up {
             (
-                cv::Point::new(rect.x + line_space, rect.y + rect.height - line_space),
+                CvPoint::new(rect.x + line_space, rect.y + rect.height - line_space),
                 -dy,
             )
         } else {
-            (cv::Point::new(rect.x + line_space, rect.y + dy), dy)
+            (CvPoint::new(rect.x + line_space, rect.y + dy), dy)
         };
 
         for text in label.split('\n') {
@@ -157,7 +159,7 @@ mod tests {
 
     #[test]
     fn test_draw() {
-        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/data/lena.jpg");
+        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/assets/lena.jpg");
         let im = load_image(&p).unwrap();
         let mut canvas = im.to_rgb8();
 

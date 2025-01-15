@@ -1,7 +1,7 @@
 use std::error::Error;
 
 fn main() {
-    let file_name = "/home/jiang/rs/iv/data/image/jack2.jpg";
+    let file_name = "/home/jiang/rs/iv/assets/images/jack2.jpg";
     match rexif::parse_file(&file_name) {
         Ok(exif) => {
             println!(

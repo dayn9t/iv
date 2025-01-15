@@ -78,7 +78,7 @@ pub fn resize_into_box(src: &DynamicImage, size: Size) -> DynamicImage {
     let dst = src.resize_exact(
         width as u32,
         height as u32,
-        image::imageops::FilterType::CatmullRom,
+        imageops::FilterType::CatmullRom,
     );
     dst
 }
@@ -88,15 +88,15 @@ pub fn resize_to(src: &DynamicImage, size: Size) -> DynamicImage {
     let dst = src.resize_exact(
         size.width as u32,
         size.height as u32,
-        image::imageops::FilterType::CatmullRom,
+        imageops::FilterType::CatmullRom,
     );
     dst
 }
 /*
 /// 图像(RGB)转换为张量(NCHW)
 pub fn image_to_tensor(src: &DynamicImage, device: &Device) -> anyhow::Result<Tensor> {
-    let data = src.to_rgb8().into_raw();
-    let tensor = Tensor::from_vec(data, (src.height() as usize, src.width() as usize, 3), device)?
+    let assets = src.to_rgb8().into_raw();
+    let tensor = Tensor::from_vec(assets, (src.height() as usize, src.width() as usize, 3), device)?
         .permute((2, 0, 1))?; // HWC -> CHW
 
     let tensor = (tensor.unsqueeze(0)?.to_dtype(DType::F32)? * (1. / 255.))?; // CHW -> NCHW

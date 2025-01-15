@@ -4,6 +4,7 @@ pub use draw::*;
 pub use pen::*;
 pub use proc::*;
 pub use show::*;
+pub use util::*;
 
 mod buffer_3c;
 mod color;
@@ -12,6 +13,7 @@ pub mod ocv;
 mod pen;
 mod proc;
 mod show;
+mod util;
 
 #[cfg(test)]
 mod tests {

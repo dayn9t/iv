@@ -73,16 +73,16 @@ fn rgb_to_hsi(c: [u8; 3]) -> [f32; 3] {
 
 
 /// 获取区域内最匹配的颜色
-pub fn rect_color(image: &mut RgbImage, rect: RectF, colors: &[Rgb]) -> usize {
+pub fn rect_color(images: &mut RgbImage, rect: RectF, colors: &[Rgb]) -> usize {
     //let huas: Vec<i64> = colors.iter().map(|c| get_hua(c.rgb())).collect();
 
     let size = SizeT {
-        width: image.width(),
-        height: image.height(),
+        width: images.width(),
+        height: images.height(),
     };
     let r = rect.absolutized(size).unwrap();
     let r = r & RectT::from_size(size);
-    let sub = imageops::crop(image, r.x, r.y, r.width, r.height);
+    let sub = imageops::crop(images, r.x, r.y, r.width, r.height);
     let mut hists = vec![0; 12];
     for x in 0..r.width {
         for y in 0..r.height {
@@ -185,7 +185,7 @@ pub fn polygon(image: &mut RgbImage, polygon: &PolygonF, color: Rgb, thickness: 
     let polygon = ip_polygon(&polygon);
 
     for _i in 0..thickness {
-        //ip::draw_polygon_mut(image, &polygon, ip_rgb(color));
+        //ip::draw_polygon_mut(images, &polygon, ip_rgb(color));
         // TODO: thickness
     }
 }

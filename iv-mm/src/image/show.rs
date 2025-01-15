@@ -1,15 +1,23 @@
-use image::RgbImage;
+use image::{GrayImage, RgbImage};
 use opencv::highgui::{imshow, wait_key};
 use opencv::imgproc::{COLOR_RGB2BGR, cvt_color};
 use opencv::prelude::Mat;
 
-use crate::image::ocv::image_as_mat;
+use crate::image::ocv::{gray_as_mat, image_as_mat};
 
 pub fn show_rgb(im: &RgbImage, title: &str, delay: i32) {
     let src = image_as_mat(im);
     let mut dst = Mat::default();
     cvt_color(&src, &mut dst, COLOR_RGB2BGR, 0).unwrap();
     imshow(title, &dst).unwrap();
+    if delay >= 0 {
+        wait_key(delay).unwrap();
+    }
+}
+
+pub fn show_gray(im: &GrayImage, title: &str, delay: i32) {
+    let mat = gray_as_mat(im);
+    imshow(title, &mat).unwrap();
     if delay >= 0 {
         wait_key(delay).unwrap();
     }
@@ -28,7 +36,7 @@ mod tests {
 
     #[test]
     fn test_mat() {
-        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/data/lena.jpg");
+        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/assets/lena.jpg");
         let im = load_image(&p).unwrap();
         let mut im = im.to_rgb8();
 

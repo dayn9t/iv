@@ -2,6 +2,7 @@ pub mod ffmpeg;
 pub mod image;
 pub mod meta;
 
+pub const PACKAGE_DIR: &str = env!("CARGO_MANIFEST_DIR");
 #[cfg(test)]
 mod tests {
     #[test]

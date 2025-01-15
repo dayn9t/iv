@@ -61,10 +61,13 @@ impl ExifManager {
     }
 
     /// 注入EXIF信息
-    pub fn inject_exif(file: &Path, time: NaiveDateTime, gps: GpsInfo) {
+    pub fn inject_exif(file: &Path, time: NaiveDateTime, gps: GpsInfo, comment: Option<&str>) {
         let mut exif = ExifManager::new(file).unwrap();
         exif.set_gps_coordinates(gps).unwrap();
         exif.set_time(time).unwrap();
+        if let Some(comment) = comment {
+            exif.set_comment(comment).unwrap();
+        }
         exif.save(file).unwrap();
 
         let p = exif.get_gps_coordinates().unwrap();
@@ -137,7 +140,7 @@ mod tests {
 
     fn create_test_image() -> NamedTempFile {
         let mut file = NamedTempFile::new().unwrap();
-        let image_data = include_bytes!("../../../data/image/lena.jpg");
+        let image_data = include_bytes!("../../../assets/images/lena.jpg");
         file.write_all(image_data).unwrap();
         file
     }
