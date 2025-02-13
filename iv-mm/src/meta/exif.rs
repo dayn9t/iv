@@ -69,9 +69,6 @@ impl ExifManager {
             exif.set_comment(comment).unwrap();
         }
         exif.save(file).unwrap();
-
-        let p = exif.get_gps_coordinates().unwrap();
-        println!("gps: {:?}", p);
     }
 
     /// 复制EXIF信息
