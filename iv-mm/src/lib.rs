@@ -1,4 +1,4 @@
-pub mod ffmpeg;
+pub mod ff;
 pub mod image;
 pub mod meta;
 

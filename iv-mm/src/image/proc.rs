@@ -92,6 +92,16 @@ pub fn resize_to(src: &DynamicImage, size: Size) -> DynamicImage {
     );
     dst
 }
+
+/// 缩放推向到指定尺寸, 保持宽高比缩放，TODO
+pub fn resize_to1(src: &DynamicImage, size: Size) -> DynamicImage {
+    let dst = src.resize_exact(
+        size.width as u32,
+        size.height as u32,
+        imageops::FilterType::CatmullRom,
+    );
+    dst
+}
 /*
 /// 图像(RGB)转换为张量(NCHW)
 pub fn image_to_tensor(src: &DynamicImage, device: &Device) -> anyhow::Result<Tensor> {

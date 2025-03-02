@@ -28,4 +28,5 @@ clap = { version = "*", features = ["derive"] }
 chrono = "*"
 tempfile = "*"
 serde = "*"
+serde_json = "1.0.134"
 
