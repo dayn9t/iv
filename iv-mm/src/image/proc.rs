@@ -42,6 +42,12 @@ pub fn get_roi(image: &DynamicImage, rect: RectF) -> DynamicImage {
     sub
 }
 
+/*
+/// 设置图像区域
+pub fn put_image(src: &RgbImage, dst: &RgbImage, x: u32, y: u32) -> DynamicImage {
+    unimplemented!()
+}*/
+
 /// 获取图像区域
 pub fn get_roi_i32(image: &DynamicImage, rect: Rect) -> DynamicImage {
     let size = Size::new(image.width() as i32, image.height() as i32);

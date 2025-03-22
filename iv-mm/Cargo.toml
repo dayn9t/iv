@@ -30,3 +30,5 @@ tempfile = "*"
 serde = "*"
 serde_json = "1.0.134"
 
+derive_more = "*"
+rand = "*"

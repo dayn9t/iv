@@ -92,10 +92,11 @@ mod tests {
 
     #[test]
     fn test_mask() {
-        let roi = vec![Point { x: 100, y: 100 }, Point { x: 200, y: 100 }, Point {
-            x: 200,
-            y: 200,
-        }];
+        let roi = vec![
+            Point { x: 100, y: 100 },
+            Point { x: 200, y: 100 },
+            Point { x: 200, y: 200 },
+        ];
 
         let mask = make_mask_i32(SIZE_NHD, &roi, 255);
         show_gray(&mask, "mask", 0);
@@ -109,10 +110,11 @@ mod tests {
         let src = load_image(&file).unwrap();
         show(&src, "src", 0);
 
-        let roi = vec![Point { x: 100, y: 100 }, Point { x: 200, y: 100 }, Point {
-            x: 200,
-            y: 200,
-        }];
+        let roi = vec![
+            Point { x: 100, y: 100 },
+            Point { x: 200, y: 100 },
+            Point { x: 200, y: 200 },
+        ];
 
         let size = Size {
             width: src.width() as i32,

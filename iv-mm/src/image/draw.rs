@@ -1,29 +1,21 @@
 use std::cmp::max;
 
-use image::RgbImage;
 use opencv::imgproc::{
     LINE_8, ellipse, get_font_scale_from_height, polylines, put_text, rectangle,
 };
 
-use iv_core::geo::{PointF, PolygonF, PolygonI};
-pub use iv_core::geo::{Size, ToAcRect};
-
-use crate::image::WHITE;
 pub use crate::image::color::Rgb;
 use crate::image::ocv::{
     CvPoint, cv_ac_point, cv_ac_rect, cv_color, cv_points, cv_rect_center, image_as_mut_mat,
 };
-
-pub fn image_size(image: &RgbImage) -> Size {
-    Size {
-        width: image.width() as i32,
-        height: image.height() as i32,
-    }
-}
+use crate::image::{ImageRgb, WHITE};
+use iv_core::geo::iface::ISize2D;
+use iv_core::geo::{PointF, PolygonF, PolygonI};
+pub use iv_core::geo::{Size, ToAcRect};
 
 /// 绘制矩形
-pub fn draw_rect(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickness: i32) {
-    let size = image_size(canvas);
+pub fn draw_rect(canvas: &mut ImageRgb, rect: impl ToAcRect, color: Rgb, thickness: i32) {
+    let size = canvas.size();
     let rect = cv_ac_rect(rect, size);
     let color = cv_color(color);
     let mut mat = image_as_mut_mat(canvas);
@@ -32,8 +24,8 @@ pub fn draw_rect(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickne
 }
 
 /// 绘制椭圆
-pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thickness: i32) {
-    let size = image_size(canvas);
+pub fn draw_ellipse(canvas: &mut ImageRgb, rect: impl ToAcRect, color: Rgb, thickness: i32) {
+    let size = canvas.size();
     let rect = cv_ac_rect(rect, size);
     let center = cv_rect_center(rect);
     let color = cv_color(color);
@@ -55,8 +47,8 @@ pub fn draw_ellipse(canvas: &mut RgbImage, rect: impl ToAcRect, color: Rgb, thic
 }
 
 /// 绘制多边形
-pub fn draw_polygon(canvas: &mut RgbImage, polygon: &PolygonF, color: Rgb, thickness: i32) {
-    let size = image_size(canvas);
+pub fn draw_polygon(canvas: &mut ImageRgb, polygon: &PolygonF, color: Rgb, thickness: i32) {
+    let size = canvas.size();
     let color = cv_color(color);
     let mut mat = image_as_mut_mat(canvas);
     let polygon: PolygonI = polygon.absolutized(size).unwrap();
@@ -67,14 +59,14 @@ pub fn draw_polygon(canvas: &mut RgbImage, polygon: &PolygonF, color: Rgb, thick
 
 /// 显示文字
 pub fn draw_text(
-    canvas: &mut RgbImage,
+    canvas: &mut ImageRgb,
     text: &str,
     left_bottom: PointF,
     color: Rgb,
     thickness: i32,
     scale: f64,
 ) {
-    let size = image_size(canvas);
+    let size = canvas.size();
     let left_bottom = cv_ac_point(left_bottom, size);
     let color = cv_color(color);
     let mut mat = image_as_mut_mat(canvas);
@@ -94,7 +86,7 @@ pub fn draw_text(
 
 // 绘制带标签的矩形框(整数坐标)
 pub fn draw_box(
-    canvas: &mut RgbImage,
+    canvas: &mut ImageRgb,
     rect: impl ToAcRect,
     label: &str,
     font_height: i32,
@@ -102,7 +94,7 @@ pub fn draw_box(
     thickness: i32,
     down_to_up: bool,
 ) {
-    let size = image_size(canvas);
+    let size = canvas.size();
     let rect = cv_ac_rect(rect, size);
     let color = cv_color(color);
     let mut mat = image_as_mut_mat(canvas);
@@ -146,41 +138,6 @@ pub fn draw_box(
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
-
-    use opencv::core::{MatTrait, Scalar};
-    use opencv::highgui;
-
-    use iv_core::geo::{IPolygon, RectF};
-
-    use crate::image::{GREEN, RED, YELLOW, load_image};
-
-    use super::*;
-
     #[test]
-    fn test_draw() {
-        let p = PathBuf::from("/home/jiang/rs/iv/iv-mm/assets/lena.jpg");
-        let im = load_image(&p).unwrap();
-        let mut canvas = im.to_rgb8();
-
-        let mut mat = image_as_mut_mat(&mut canvas);
-
-        let window = "lena";
-        highgui::named_window(window, highgui::WINDOW_AUTOSIZE).unwrap();
-        highgui::imshow(window, &mat).unwrap();
-        let _key = highgui::wait_key(0).unwrap();
-
-        mat.set_scalar(Scalar::all(255.0)).unwrap();
-        let mat1 = image_as_mut_mat(&mut canvas);
-
-        let r = RectF::new(0.25, 1.0 / 3.0, 0.5, 1.0 / 3.0);
-        draw_rect(&mut canvas, r, YELLOW, 3);
-        draw_ellipse(&mut canvas, r, RED, 1);
-        let r = RectF::new(0.2, 0.2, 0.6, 0.6);
-        let poly = PolygonF::from(r.vertices());
-        draw_polygon(&mut canvas, &poly, GREEN, 1);
-
-        highgui::imshow(window, &mat1).unwrap();
-        let _key = highgui::wait_key(0).unwrap();
-    }
+    fn test_mat() {}
 }

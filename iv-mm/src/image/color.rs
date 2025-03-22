@@ -45,6 +45,12 @@ impl Rgb {
     }
 }
 
+impl Into<[u8; 3]> for Rgb {
+    fn into(self) -> [u8; 3] {
+        [self.0, self.1, self.2]
+    }
+}
+
 impl Display for Rgb {
     ///格式化显示ID
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -365,3 +371,17 @@ pub const W3C16: [Rgb; 16] = [
     BLACK, GREEN, SILVER, LIME, GRAY, OLIVE, WHITE, YELLOW, MAROON, NAVY, RED, BLUE, PURPLE, TEAL,
     FUCHSIA, AQUA,
 ];
+
+use rand::Rng;
+
+/// 从W3C16随机取出一种颜色
+pub fn random_color16() -> Rgb {
+    let idx = rand::thread_rng().gen_range(0..W3C16.len());
+    W3C16[idx]
+}
+
+/// 从COLORS7随机取出一种颜色
+pub fn random_color7() -> Rgb {
+    let idx = rand::thread_rng().gen_range(0..COLORS7.len());
+    COLORS7[idx]
+}

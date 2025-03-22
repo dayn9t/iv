@@ -16,4 +16,11 @@ anyhow = "*"
 thiserror = "*"
 path_macro = "*"
 
-opencv = { version = "*", default-features = false, features = ["clang-runtime", "imgproc", "highgui"] }
+rand = "*"
+iced = { version = "*", features = ["image", "canvas", "tokio", "debug"] }
+opencv = { version = "*", default-features = false, features = ["clang-runtime", "imgproc", "highgui", "imgcodecs"] }
+tracing-subscriber = "*"
+chrono = "*"
+serde = "*"
+serde_json = "*"
+
