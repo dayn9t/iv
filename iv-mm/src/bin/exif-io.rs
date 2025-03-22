@@ -1,4 +1,4 @@
-use iv_mm::PACKAGE_DIR;
+use iv_mm::IV_MM_DIR;
 use iv_mm::meta::ExifManager;
 use path_macro::path;
 use rexiv2::GpsInfo;
@@ -20,7 +20,7 @@ pub struct SnapshotMeta {
 
 fn main() {
     //let file = "/home/jiang/rs/iv/assets/images/jack2.jpg";
-    let dir = path!(PACKAGE_DIR / "../assets/images");
+    let dir = path!(IV_MM_DIR / "../assets/images");
 
     let src_file = path!(dir / "jack2.jpg");
     let dst_file = path!(dir / "jack2.jpg");

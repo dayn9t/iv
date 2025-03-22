@@ -86,7 +86,7 @@ mod tests {
     use path_macro::path;
     //use candle_core::Shape;
     use super::*;
-    use crate::PACKAGE_DIR;
+    use crate::IV_MM_DIR;
     use crate::image::{load_image, show, show_gray};
     use iv_core::geo::{Point, SIZE_NHD};
 
@@ -104,7 +104,7 @@ mod tests {
 
     #[test]
     fn test_mat_copy() {
-        let file = path!(PACKAGE_DIR / "../assets/images/lena.jpg");
+        let file = path!(IV_MM_DIR / "../assets/images/lena.jpg");
 
         println!("file: {}", file.display());
         let src = load_image(&file).unwrap();
