@@ -2,7 +2,7 @@ use iv_core::geo::{IPolygon, PointF, PolygonF, RectF};
 use iv_mm::image::*;
 
 use iv_core::geo::SIZE_HD;
-use iv_gui::PACKAGE_DIR;
+use iv_gui::IV_GUI_DIR;
 use iv_gui::image_win::{ImageWin, OnUiEvent};
 use opencv::core::Point;
 use path_macro::path;
@@ -30,7 +30,7 @@ impl OnUiEvent for ImageViewer {
 }
 
 fn draw() {
-    let file = path!(PACKAGE_DIR / "../assets/images/lena.jpg");
+    let file = path!(IV_GUI_DIR / "../assets/images/lena.jpg");
 
     let background = ImageRgb::load(&file).unwrap();
 
