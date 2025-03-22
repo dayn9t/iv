@@ -1,6 +1,6 @@
 use iv_core::geo::SIZE_HD;
 use iv_gui::image_win::{ImageWin, OnUiEvent};
-use iv_mm::image::{BLACK, IImage2D, ImageRgb, random_color16};
+use iv_mm::image::{IImage2D, ImageRgb, random_color16};
 use opencv::core::Point;
 
 #[derive(Default, Clone, Copy)]

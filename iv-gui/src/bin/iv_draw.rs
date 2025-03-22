@@ -43,7 +43,7 @@ fn draw() {
 
     win.set_background(&background);
 
-    win.run(10);
+    win.run(200);
 }
 
 fn main() {
