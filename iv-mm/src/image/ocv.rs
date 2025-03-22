@@ -10,6 +10,7 @@ use iv_core::geo::{Point, Points, Rect, Size, ToAcPoint, ToAcRect};
 use crate::image::Rgb;
 
 pub type CvPoint = opencv::core::Point;
+pub type CvSize = opencv::core::Size;
 pub type CvRect = opencv::core::Rect;
 pub type CvScalar = opencv::core::Scalar;
 pub type CvPoints = opencv::core::Vector<CvPoint>;

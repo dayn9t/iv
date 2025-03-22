@@ -1,5 +1,5 @@
 use iv_core::geo::Size;
-use iv_mm::image::{IImage2D, ImageRgb, Rgb, WHITE, show_rgb};
+use iv_mm::image::{IImage2D, ImageRgb, Rgb, WHITE, resize, show_rgb};
 use opencv::{core::Point, highgui};
 use std::path::Path;
 
@@ -102,7 +102,7 @@ impl ImageWin {
     }
 
     pub fn refresh(&mut self) {
-        self.background.resize_to(&mut self.canvas);
+        resize(&self.background, &mut self.canvas).unwrap();
         self.events.on_draw(&mut self.canvas, self.pos);
         show_rgb(&self.canvas, &self.title, -1);
     }

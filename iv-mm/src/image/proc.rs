@@ -1,6 +1,7 @@
 use std::path::Path;
 
-use crate::image::ocv::{image_as_mut_mat, yuyv_as_mat2c};
+use crate::image::ImageRgb;
+use crate::image::ocv::{CvSize, image_as_mat, image_as_mut_mat, yuyv_as_mat2c};
 use image::{DynamicImage, RgbImage, imageops};
 use iv_core::geo::{Rect, RectF, Size};
 use opencv::imgproc::{COLOR_YUV2RGB_YUYV, cvt_color};
@@ -90,13 +91,20 @@ pub fn resize_into_box(src: &DynamicImage, size: Size) -> DynamicImage {
 }
 
 /// 缩放推向到指定尺寸, 不保持宽高比缩放
-pub fn resize_to(src: &DynamicImage, size: Size) -> DynamicImage {
-    let dst = src.resize_exact(
-        size.width as u32,
-        size.height as u32,
-        imageops::FilterType::CatmullRom,
-    );
-    dst
+pub fn resize(src: &ImageRgb, dst: &mut ImageRgb) -> AnyResult<()> {
+    let src_mat = image_as_mat(&src);
+    let mut dst_mat = image_as_mut_mat(dst);
+    let dst_size = CvSize::new(dst.width() as i32, dst.height() as i32);
+
+    opencv::imgproc::resize(
+        &src_mat,
+        &mut dst_mat,
+        dst_size,
+        0.0,
+        0.0,
+        opencv::imgproc::INTER_CUBIC,
+    )?;
+    Ok(())
 }
 
 /// 缩放推向到指定尺寸, 保持宽高比缩放，TODO

@@ -48,7 +48,7 @@ fn main() -> AnyResult<()> {
     let interval = (1000.0 / opt.fps) as i64;
     let interval = Duration::milliseconds(interval);
 
-    for (i, file) in files.iter().enumerate() {
+    for (_i, file) in files.iter().enumerate() {
         let new_time = start_time + interval;
         let new_time = ClockTime::from(new_time);
         let new_name = format!(

@@ -55,11 +55,15 @@ impl IImage2D for ImageRgb {
         }
     }
 
-    fn resize_to(&self, dst: &mut Self) {
-        let w = dst.width() as u32;
-        let h = dst.height() as u32;
-        let resized = imageops::resize(&self.0, w, h, imageops::FilterType::CatmullRom);
-        dst.0 = resized;
+    fn resize_to(&self, size: Size) -> Self {
+        let w = size.width as u32;
+        let h = size.height as u32;
+        Self(imageops::resize(
+            &self.0,
+            w,
+            h,
+            imageops::FilterType::CatmullRom,
+        ))
     }
 
     fn load(path: &Path) -> AnyResult<Self> {

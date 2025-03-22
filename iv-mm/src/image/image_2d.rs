@@ -1,6 +1,6 @@
 pub use crate::image::Rgb;
-use iv_core::geo::Rect;
 use iv_core::geo::iface::ISize2D;
+use iv_core::geo::{Rect, Size};
 use rx_core::prelude::AnyResult;
 use std::path::Path;
 
@@ -17,8 +17,8 @@ pub trait IImage2D: ISize2D<i32> + Sized {
     /// 填充全图颜色
     fn fill_color(&mut self, color: Rgb);
 
-    /// 缩放到目标图形中
-    fn resize_to(&self, dst: &mut Self);
+    /// 缩放到指定尺寸
+    fn resize_to(&self, size: Size) -> Self;
 
     /// 加在图像
     fn load(path: &Path) -> AnyResult<Self>;

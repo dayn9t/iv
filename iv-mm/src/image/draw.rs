@@ -4,7 +4,6 @@ use opencv::imgproc::{
     LINE_8, ellipse, get_font_scale_from_height, polylines, put_text, rectangle,
 };
 
-pub use crate::image::color::Rgb;
 use crate::image::ocv::{
     CvPoint, cv_ac_point, cv_ac_rect, cv_color, cv_points, cv_rect_center, image_as_mut_mat,
 };
