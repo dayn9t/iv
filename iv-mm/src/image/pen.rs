@@ -4,48 +4,73 @@ use std::fmt::Display;
 
 /// 画笔
 #[derive(Copy, Clone, Debug, Default, PartialEq)] //, Serialize, Deserialize
-pub struct Pen(Rgb, i32);
+pub struct Pen {
+    /// 画笔颜色
+    pub color: Rgb,
+    /// 获取画笔线宽
+    pub thickness: i32,
+}
 
 impl Pen {
     pub fn new(color: Rgb, thickness: i32) -> Self {
-        Self(color, thickness)
-    }
-
-    /// 获取画笔颜色
-    pub fn color(&self) -> Rgb {
-        self.0
-    }
-
-    /// 获取画笔线宽
-    pub fn thickness(&self) -> i32 {
-        self.1
+        Self { color, thickness }
     }
 }
 
 impl Display for Pen {
     ///格式化显示ID
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}({})", self.0, self.1)
+        write!(f, "{}({})", self.color, self.thickness)
     }
 }
 
 /// 红笔
-pub const RED_PEN: Pen = Pen(RED, 1);
+pub const PEN_RED: Pen = Pen {
+    color: RED,
+    thickness: 2,
+};
 /// 橙笔
-pub const ORANGE_PEN: Pen = Pen(ORANGE, 1);
+pub const PEN_ORANGE: Pen = Pen {
+    color: ORANGE,
+    thickness: 2,
+};
 /// 黄笔
-pub const YELLOW_PEN: Pen = Pen(YELLOW, 1);
+pub const PEN_YELLOW: Pen = Pen {
+    color: YELLOW,
+    thickness: 2,
+};
 /// 绿笔
-pub const GREEN_PEN: Pen = Pen(GREEN, 1);
+pub const PEN_GREEN: Pen = Pen {
+    color: GREEN,
+    thickness: 2,
+};
 /// 青笔
-pub const CYAN_PEN: Pen = Pen(CYAN, 1);
+pub const PEN_CYAN: Pen = Pen {
+    color: CYAN,
+    thickness: 2,
+};
 /// 蓝笔
-pub const BLUE_PEN: Pen = Pen(BLUE, 1);
+pub const PEN_BLUE: Pen = Pen {
+    color: BLUE,
+    thickness: 2,
+};
 /// 紫笔
-pub const PURPLE_PEN: Pen = Pen(PURPLE, 1);
+pub const PEN_PURPLE: Pen = Pen {
+    color: PURPLE,
+    thickness: 2,
+};
 /// 黑笔
-pub const BLACK_PEN: Pen = Pen(BLACK, 1);
+pub const PEN_BLACK: Pen = Pen {
+    color: BLACK,
+    thickness: 2,
+};
 /// 白笔
-pub const WHITE_PEN: Pen = Pen(WHITE, 1);
+pub const PEN_WHITE: Pen = Pen {
+    color: WHITE,
+    thickness: 2,
+};
 /// 灰笔
-pub const GRAY_PEN: Pen = Pen(GRAY, 1);
+pub const PEN_GRAY: Pen = Pen {
+    color: GRAY,
+    thickness: 2,
+};

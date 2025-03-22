@@ -11,6 +11,9 @@ pub trait IImage2D: ISize2D<i32> + Sized {
     /// 自动裁剪超出图像边界的部分
     fn get_roi(&self, rect: Rect) -> Self;
 
+    /// 设置图像上指定矩形区域的子图像
+    fn set_roi(&mut self, rect: Rect, other: &Self);
+
     /// 填充全图颜色
     fn fill_color(&mut self, color: Rgb);
 

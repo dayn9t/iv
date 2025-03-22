@@ -1,7 +1,7 @@
 use crate::image::{IImage2D, Rgb};
 use derive_more::{AsRef, Deref, DerefMut, From, Into};
 
-use image::{RgbImage, imageops};
+use image::{GenericImage, RgbImage, imageops};
 use iv_core::geo::iface::ISize2D;
 use iv_core::geo::{Rect, Size};
 use rx_core::sys::fs::make_parent;
@@ -39,6 +39,13 @@ impl IImage2D for ImageRgb {
 
         let dst = imageops::crop_imm(&self.0, r.x, r.y, r.width, r.height);
         Self(dst.to_image())
+    }
+
+    fn set_roi(&mut self, rect: Rect, other: &Self) {
+        assert_eq!(rect.size(), other.size());
+        self.0
+            .copy_from(&other.0, rect.x as u32, rect.y as u32)
+            .unwrap();
     }
 
     fn fill_color(&mut self, color: Rgb) {
