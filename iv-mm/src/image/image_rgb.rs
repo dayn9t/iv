@@ -66,13 +66,13 @@ impl IImage2D for ImageRgb {
         ))
     }
 
-    fn load(path: &Path) -> AnyResult<Self> {
-        let im = image::ImageReader::open(&path)?.decode()?;
+    fn load(path: impl AsRef<Path>) -> AnyResult<Self> {
+        let im = image::ImageReader::open(path)?.decode()?;
         Ok(ImageRgb(im.into_rgb8()))
     }
 
-    fn save(&self, path: &Path) -> AnyResult<()> {
-        make_parent(path)?;
+    fn save(&self, path: impl AsRef<Path>) -> AnyResult<()> {
+        make_parent(path.as_ref())?;
         self.0.save(path)?;
         Ok(())
     }

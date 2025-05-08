@@ -376,12 +376,12 @@ use rand::Rng;
 
 /// 从W3C16随机取出一种颜色
 pub fn random_color16() -> Rgb {
-    let idx = rand::thread_rng().gen_range(0..W3C16.len());
+    let idx = rand::rng().random_range(0..W3C16.len());
     W3C16[idx]
 }
 
 /// 从COLORS7随机取出一种颜色
 pub fn random_color7() -> Rgb {
-    let idx = rand::thread_rng().gen_range(0..COLORS7.len());
+    let idx = rand::rng().random_range(0..COLORS7.len());
     COLORS7[idx]
 }

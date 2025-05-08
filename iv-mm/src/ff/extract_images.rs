@@ -2,8 +2,9 @@ use path_macro::path;
 use rx_core::sys::fs::to_string;
 use std::path::Path;
 use std::process::Command;
+use rx_core::prelude::AnyResult;
+use tracing::*;
 
-/// 从视频文件提取图片
 pub fn extract_images(video_file: &Path, dst_dir: &Path, fps: f32, ext: &str) {
     // 使用 ffmpeg 提取图片
     let mut cmd = Command::new("ffmpeg");
@@ -17,10 +18,30 @@ pub fn extract_images(video_file: &Path, dst_dir: &Path, fps: f32, ext: &str) {
         "2", // 质量参数: 1-最高，31-最低
         &dst_file,
     ];
-    // info!("ffmpeg {:?}", args.join(" "));
+    info!("ffmpeg {:?}", args.join(" "));
     cmd.args(&args);
     let output = cmd.output().unwrap();
     if !output.status.success() {
-        // error!("ffmpeg failed: {:?}", output);
+        error!("ffmpeg failed: {:?}", output);
     }
+}
+
+/// 从视频中提取流
+pub fn extract_stream(input_file: &Path, dst_file: &Path, stream_id: usize) -> AnyResult<()> {
+    let mut cmd = Command::new("ffmpeg");
+    let args = [
+        "-i",
+        input_file.to_str().unwrap(),
+        "-map",
+        &format!("0:{stream_id}"),
+        dst_file.to_str().unwrap(),
+    ];
+    info!("ffmpeg {:?}", args.join(" "));
+    cmd.args(&args);
+    let output = cmd.output().unwrap();
+    if !output.status.success() {
+        error!("ffmpeg failed: {:?}", output);
+        return Err(anyhow::anyhow!("ffmpeg command failed"));
+    }
+    Ok(())
 }
