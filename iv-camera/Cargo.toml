@@ -1,6 +1,10 @@
 [package]
 name = "iv-camera"
-edition = "2024"
+
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
 
 [dependencies]
 
