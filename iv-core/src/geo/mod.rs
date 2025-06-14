@@ -36,6 +36,8 @@ pub type PointDs = Vec<PointD>;
 pub type Size = SizeT<i32>;
 /// 2D尺寸(i32)
 pub type SizeI = SizeT<i32>;
+/// 2D尺寸(u32)
+pub type SizeU = SizeT<u32>;
 /// 2D尺寸(i64)
 pub type SizeL = SizeT<i64>;
 /// 2D尺寸(f32)

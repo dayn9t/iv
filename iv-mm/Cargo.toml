@@ -1,7 +1,5 @@
 [package]
 name = "iv-mm"
-version = "0.1.0"
-authors = ["dayn9t <dayn9t@gmail.com>"]
 edition = "2024"
 
 [dependencies]
@@ -30,5 +28,5 @@ tempfile = "*"
 serde = "*"
 serde_json = "1.0.134"
 
-derive_more = "*"
+derive_more =  { version = "*", features = ["full"] }
 rand = "*"

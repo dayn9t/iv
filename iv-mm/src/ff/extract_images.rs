@@ -1,8 +1,8 @@
 use path_macro::path;
+use rx_core::prelude::AnyResult;
 use rx_core::sys::fs::to_string;
 use std::path::Path;
 use std::process::Command;
-use rx_core::prelude::AnyResult;
 use tracing::*;
 
 pub fn extract_images(video_file: &Path, dst_dir: &Path, fps: f32, ext: &str) {
