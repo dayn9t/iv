@@ -4,6 +4,7 @@ pub use polygon::*;
 pub use rect::*;
 pub use shape::*;
 pub use size::*;
+
 pub mod iface;
 mod normalize;
 mod point;
@@ -11,6 +12,7 @@ mod polygon;
 mod rect;
 mod shape;
 mod size;
+mod types;
 
 /// 2D点(i32)
 pub type Point = PointT<i32>;

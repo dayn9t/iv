@@ -1,8 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
-use geo_types::CoordNum;
+use super::types::*;
 use rx_core::m::{div_f64, mul_round_f64};
-use serde::{Deserialize, Serialize};
 
 use super::{IShape, RectT, SizeT};
 

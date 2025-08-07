@@ -1,8 +1,9 @@
+use super::types::*;
+use derive_more::{Deref, DerefMut};
 use geo::Contains;
 pub use geo::GeoNum;
-use geo_types::{Coord, CoordNum, LineString, Polygon as GtPolygon};
+use geo_types::{Coord, LineString, Polygon as GtPolygon};
 use rx_core::m::{partial_max, partial_min};
-use rx_core::prelude::*;
 
 use crate::geo::{IShape, PointT, RectT, SizeT};
 
@@ -30,7 +31,7 @@ pub fn to_geo_point<T: CoordNum>(p: &PointT<T>) -> geo::Point<T> {
 }
 
 /// 多边形
-#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, Deref, DerefMut)]
 pub struct PolygonT<T: CoordNum>(Vec<PointT<T>>);
 
 impl<T: GeoNum> PolygonT<T> {
@@ -42,6 +43,24 @@ impl<T: GeoNum> PolygonT<T> {
     /// 转换成 ::geo 类型
     pub fn to_geo(&self) -> GtPolygon<T> {
         GtPolygon::<T>::new(to_line_string(&self.0), vec![])
+    }
+
+    /// 判断多边形是否为矩形
+    pub fn is_rect(&self) -> bool {
+        self.0.len() == 4
+            && self.0[0].x == self.0[1].x
+            && self.0[1].y == self.0[2].y
+            && self.0[2].x == self.0[3].x
+            && self.0[3].y == self.0[0].y
+    }
+
+    /// 如果多边形是矩形, 则获取矩形
+    pub fn to_rect(&self) -> Option<RectT<T>> {
+        if self.is_rect() {
+            Some(RectT::from_points(self.0[0], self.0[2]))
+        } else {
+            None
+        }
     }
 
     /// 获取坐标归一化PolygonT

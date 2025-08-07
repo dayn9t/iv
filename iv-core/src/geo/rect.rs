@@ -1,9 +1,8 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign};
 
-use geo_types::CoordNum;
+use super::types::*;
 use rx_core::m::{div_f64, mul_round_f64, partial_max, partial_min};
-use serde::{Deserialize, Serialize};
 
 use super::{IPolygon, IShape, PointT, SizeT};
 

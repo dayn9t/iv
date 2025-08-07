@@ -1,8 +1,7 @@
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
-use geo_types::CoordNum;
-use serde::{Deserialize, Serialize};
+use super::types::*;
 
 use super::PointT;
 
