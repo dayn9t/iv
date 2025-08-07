@@ -220,3 +220,23 @@ where
         self.y /= rhs;
     }
 }
+
+/// 2D点(i32)
+pub type Point = PointT<i32>;
+/// 2D点(i32)
+pub type PointI = PointT<i32>;
+/// 2D点(i64)
+pub type PointL = PointT<i64>;
+/// 2D点(f32)
+pub type PointF = PointT<f32>;
+/// 2D点(f64)
+pub type PointD = PointT<f64>;
+
+/// 2D点集(i32)
+pub type Points = Vec<Point>;
+/// 2D点集(i64)
+pub type PointLs = Vec<PointL>;
+/// 2D点集(f32)
+pub type PointFs = Vec<PointF>;
+/// 2D点集(f64)
+pub type PointDs = Vec<PointD>;

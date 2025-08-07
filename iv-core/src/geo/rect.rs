@@ -422,6 +422,18 @@ impl<T: CoordNum> BitAndAssign for RectT<T> {
         }
     }
 }
+
+/// 长方形(i32)
+pub type Rect = RectT<i32>;
+/// 长方形(i32)
+pub type RectI = RectT<i32>;
+/// 长方形(i64)
+pub type RectL = RectT<i64>;
+/// 长方形(f32)
+pub type RectF = RectT<f32>;
+/// 长方形(f64)
+pub type RectD = RectT<f64>;
+
 /*
 impl fmt::Debug for RotatedRect {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

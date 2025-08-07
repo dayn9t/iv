@@ -141,9 +141,16 @@ pub fn bounding_box<T: GeoNum>(points: &[PointT<T>]) -> RectT<T> {
     RectT::new(min_x, min_y, max_x - min_x, max_y - min_y)
 }
 
-pub type PolygonF = PolygonT<f32>;
-
+/// 多边形(i32)
+pub type Polygon = PolygonT<i32>;
+/// 多边形(i32)
 pub type PolygonI = PolygonT<i32>;
+/// 多边形(i64)
+pub type PolygonL = PolygonT<i64>;
+/// 多边形(f32)
+pub type PolygonF = PolygonT<f32>;
+/// 多边形(f64)
+pub type PolygonD = PolygonT<f64>;
 
 #[cfg(test)]
 mod tests {
