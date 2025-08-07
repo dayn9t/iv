@@ -1,0 +1,13 @@
+{
+	"streams": [
+		{
+			"index": 4,
+			"codec_name": "subrip",
+			"codec_type": "subtitle",
+			"tags": {
+				"language": "zho",
+				"title": "OSD"
+			}
+		}
+	]
+}

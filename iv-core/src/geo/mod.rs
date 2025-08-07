@@ -56,6 +56,17 @@ pub type RectF = RectT<f32>;
 /// 长方形(f64)
 pub type RectD = RectT<f64>;
 
+/// 多边形(i32)
+pub type Polygon = PolygonT<i32>;
+/// 多边形(i32)
+pub type PolygonI = PolygonT<i32>;
+/// 多边形(i64)
+pub type PolygonL = PolygonT<i64>;
+/// 多边形(f32)
+pub type PolygonF = PolygonT<f32>;
+/// 多边形(f64)
+pub type PolygonD = PolygonT<f64>;
+
 pub const SIZE_8K: Size = Size {
     width: 8192,
     height: 4320,

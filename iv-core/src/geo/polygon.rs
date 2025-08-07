@@ -1,6 +1,6 @@
 use geo::Contains;
 pub use geo::GeoNum;
-use geo_types::{Coord, CoordNum, LineString, Polygon};
+use geo_types::{Coord, CoordNum, LineString, Polygon as GtPolygon};
 use rx_core::m::{partial_max, partial_min};
 use rx_core::prelude::*;
 
@@ -40,8 +40,8 @@ impl<T: GeoNum> PolygonT<T> {
     }
 
     /// 转换成 ::geo 类型
-    pub fn to_geo(&self) -> Polygon<T> {
-        Polygon::<T>::new(to_line_string(&self.0), vec![])
+    pub fn to_geo(&self) -> GtPolygon<T> {
+        GtPolygon::<T>::new(to_line_string(&self.0), vec![])
     }
 
     /// 获取坐标归一化PolygonT
@@ -58,6 +58,12 @@ impl<T: GeoNum> PolygonT<T> {
             .map(|p| p.absolutized(size).unwrap())
             .collect();
         Some(PolygonT::from(ps))
+    }
+}
+
+impl<T: GeoNum> From<RectT<T>> for PolygonT<T> {
+    fn from(rect: RectT<T>) -> Self {
+        Self(rect.vertices())
     }
 }
 
@@ -122,7 +128,8 @@ pub type PolygonI = PolygonT<i32>;
 
 #[cfg(test)]
 mod tests {
-    use crate::geo::PointF;
+    use crate::geo::{PointF, Rect};
+    use rx_core::text::json;
 
     use super::*;
 
@@ -160,5 +167,12 @@ mod tests {
         assert_eq!(bbox.y, 1.0);
         assert_eq!(bbox.right(), 3.0);
         assert_eq!(bbox.bottom(), 4.0);
+    }
+
+    #[test]
+    fn test_io() {
+        let p: PolygonI = Rect::one().into();
+        let s = json::to_pretty(&p).unwrap();
+        println!("polygon: {}", s);
     }
 }
