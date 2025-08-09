@@ -8,6 +8,17 @@ use opencv::core::MatTraitConst;
 use opencv::imgproc;
 use rx_core::text::AnyResult;
 
+use image::ImageReader;
+use std::path::Path;
+
+/// 根据图像路径获取图像尺寸，不加载图像数据
+pub fn get_image_size<P: AsRef<Path>>(image_path: P) -> AnyResult<Size> {
+    // 只读取图像的尺寸信息，不解码像素数据
+    let reader = ImageReader::open(image_path)?;
+    let dimensions = reader.into_dimensions()?;
+    Ok(Size::new(dimensions.0 as i32, dimensions.1 as i32))
+}
+
 /// 根据多边形区域，生成掩码图像
 pub fn make_mask(size: Size, roi: &PointFs, color: u8) -> GrayImage {
     let roi = roi.to_ac_points(size);
@@ -89,6 +100,24 @@ mod tests {
     use crate::IV_MM_DIR;
     use crate::image::{load_image, show, show_gray};
     use iv_core::geo::{Point, SIZE_NHD};
+
+    #[test]
+    fn test_get_image_size() -> AnyResult<()> {
+        // 测试存在的图片文件
+        let file = path!(IV_MM_DIR / "../assets/images/lena.jpg");
+        let size = get_image_size(&file)?;
+
+        // 确认尺寸是有效的（大于0）
+        assert_eq!(size.width, 240, "图像宽度应该大于0");
+        assert_eq!(size.height, 224, "图像高度应该大于0");
+
+        // 测试不存在的文件
+        let nonexistent_file = path!(IV_MM_DIR / "nonexistent_image.jpg");
+        let result = get_image_size(&nonexistent_file);
+        assert!(result.is_err(), "对不存在的文件应返回错误");
+
+        Ok(())
+    }
 
     #[test]
     fn test_mask() {

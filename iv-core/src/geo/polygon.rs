@@ -63,6 +63,11 @@ impl<T: GeoNum> PolygonT<T> {
         }
     }
 
+    /// 获取外包矩形
+    pub fn bbox(&self) -> RectT<T> {
+        bounding_box(&self.0)
+    }
+
     /// 获取坐标归一化PolygonT
     pub fn normalized<T1: CoordNum, D: GeoNum>(&self, size: SizeT<T1>) -> Option<PolygonT<D>> {
         let ps: Vec<PointT<D>> = self.0.iter().map(|p| p.normalized(size).unwrap()).collect();
