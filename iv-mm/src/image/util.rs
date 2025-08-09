@@ -13,7 +13,6 @@ use std::path::Path;
 
 /// 根据图像路径获取图像尺寸，不加载图像数据
 pub fn get_image_size<P: AsRef<Path>>(image_path: P) -> AnyResult<Size> {
-    // 只读取图像的尺寸信息，不解码像素数据
     let reader = ImageReader::open(image_path)?;
     let dimensions = reader.into_dimensions()?;
     Ok(Size::new(dimensions.0 as i32, dimensions.1 as i32))
