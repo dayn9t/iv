@@ -6,9 +6,7 @@ use image::{DynamicImage, GrayImage, ImageReader, RgbImage};
 use iv_core::geo::{PointFs, Points, Size, ToAcPoints};
 use opencv::core::MatTraitConst;
 use opencv::imgproc;
-use rx_core::text::AnyResult;
-
-use std::path::Path;
+use rx_core::prelude::*;
 
 /// 根据图像路径获取图像尺寸，不加载图像数据
 pub fn get_image_size<P: AsRef<Path>>(image_path: P) -> AnyResult<Size> {
