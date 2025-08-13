@@ -31,10 +31,14 @@ pub fn to_geo_point<T: CoordNum>(p: &PointT<T>) -> geo::Point<T> {
 }
 
 /// 多边形
-#[derive(Debug, Default, Clone, Serialize, Deserialize, Deref, DerefMut)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, Deref, DerefMut, PartialEq)]
 pub struct PolygonT<T: CoordNum>(Vec<PointT<T>>);
 
 impl<T: GeoNum> PolygonT<T> {
+    pub fn rect_one() -> Self {
+        RectT::one().into()
+    }
+
     /// 获取顶点集合引用
     pub fn vertices_ref(&self) -> &Vec<PointT<T>> {
         &self.0
@@ -48,10 +52,10 @@ impl<T: GeoNum> PolygonT<T> {
     /// 判断多边形是否为矩形
     pub fn is_rect(&self) -> bool {
         self.0.len() == 4
-            && self.0[0].x == self.0[1].x
-            && self.0[1].y == self.0[2].y
-            && self.0[2].x == self.0[3].x
-            && self.0[3].y == self.0[0].y
+            && self.0[0].y == self.0[1].y
+            && self.0[1].x == self.0[2].x
+            && self.0[2].y == self.0[3].y
+            && self.0[3].x == self.0[0].x
     }
 
     /// 如果多边形是矩形, 则获取矩形
@@ -82,6 +86,11 @@ impl<T: GeoNum> PolygonT<T> {
             .map(|p| p.absolutized(size).unwrap())
             .collect();
         Some(PolygonT::from(ps))
+    }
+
+    /// 转换成点元组集合
+    pub fn to_tuples(&self) -> Vec<(T, T)> {
+        self.0.iter().map(|p| p.to_tuple()).collect()
     }
 }
 

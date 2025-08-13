@@ -1,7 +1,7 @@
 use crate::image::{IImage2D, Rgb};
 use derive_more::{AsRef, Deref, DerefMut, From, Into};
 
-use image::{GenericImage, RgbImage, imageops};
+use image::{GenericImage, GrayImage, imageops};
 use iv_core::geo::iface::ISize2D;
 use iv_core::geo::{Rect, Size};
 use rx_core::sys::fs::make_parent;
@@ -18,6 +18,25 @@ pub fn cvt_color(rgb: Rgb) -> image::Rgb<u8> {
 ///
 #[derive(Deref, DerefMut, From, Into, AsRef, Clone)]
 pub struct ImageRgb(image::RgbImage);
+
+impl ImageRgb {
+    pub fn new(size: Size, color: Rgb) -> Self {
+        let im = image::ImageBuffer::from_fn(size.width as u32, size.height as u32, |_, _| {
+            cvt_color(color)
+        });
+
+        ImageRgb(im)
+    }
+
+    pub fn new_black(size: Size) -> Self {
+        Self(image::RgbImage::new(size.width as u32, size.height as u32))
+    }
+
+    pub fn copy_to(&self, _mask: &GrayImage, _dst: &mut Self) -> AnyResult<()> {
+        //call copy_rgb_masked
+        unimplemented!()
+    }
+}
 
 impl ISize2D<i32> for ImageRgb {
     fn width(&self) -> i32 {
@@ -75,20 +94,6 @@ impl IImage2D for ImageRgb {
         make_parent(path.as_ref())?;
         self.0.save(path)?;
         Ok(())
-    }
-}
-
-impl ImageRgb {
-    pub fn new(size: Size, color: Rgb) -> Self {
-        let im = image::ImageBuffer::from_fn(size.width as u32, size.height as u32, |_, _| {
-            cvt_color(color)
-        });
-
-        ImageRgb(im)
-    }
-
-    pub fn new_black(size: Size) -> Self {
-        Self(RgbImage::new(size.width as u32, size.height as u32))
     }
 }
 

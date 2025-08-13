@@ -27,6 +27,16 @@ impl<T: CoordNum> SizeT<T> {
         }
     }
 
+    /// 检查是否包含另一个尺寸
+    pub fn contains(self, other: Self) -> bool {
+        self.width >= other.width && self.height >= other.height
+    }
+
+    /// 将尺寸限制在当前边界内
+    pub fn bound_size(self, other: Self) -> Self {
+        if self.contains(other) { other } else { self }
+    }
+
     /// 获取简短信息
     pub fn brief(&self) -> String {
         format!("{:?}x{:?}", self.width, self.height)
