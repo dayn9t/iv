@@ -2,13 +2,12 @@ use crate::image::ocv::{
     CvPoint, CvScalar, cv_points, gray_as_mat, gray_as_mut_mat, image_as_mat, image_as_mut_mat,
 };
 use anyhow::anyhow;
-use image::{DynamicImage, GrayImage, RgbImage};
+use image::{DynamicImage, GrayImage, ImageReader, RgbImage};
 use iv_core::geo::{PointFs, Points, Size, ToAcPoints};
 use opencv::core::MatTraitConst;
 use opencv::imgproc;
 use rx_core::text::AnyResult;
 
-use image::ImageReader;
 use std::path::Path;
 
 /// 根据图像路径获取图像尺寸，不加载图像数据
@@ -93,12 +92,12 @@ pub fn copy_image_masked(
 
 #[cfg(test)]
 mod tests {
-    use path_macro::path;
     //use candle_core::Shape;
     use super::*;
     use crate::IV_MM_DIR;
     use crate::image::{load_image, show, show_gray};
     use iv_core::geo::{Point, SIZE_NHD};
+    use path_macro::path;
 
     #[test]
     fn test_get_image_size() -> AnyResult<()> {
