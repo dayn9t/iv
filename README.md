@@ -15,3 +15,4 @@ Rust语言智能于视频库。
 ## 依赖
 
 
+sudo apt install libavdevice-dev
